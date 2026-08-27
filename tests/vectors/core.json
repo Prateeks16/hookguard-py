@@ -632,7 +632,7 @@
       "signature": "0356b464e2f5c9e860279fc758566bfe98913ce8d074925ce56ca1f86e5a0861"
     }
   ],
-  "go_version": "go1.26.7",
+  "go_version": "go1.26.3",
   "goduration": [
     {
       "name": "\"5m\"",
