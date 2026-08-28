@@ -1,0 +1,73 @@
+# Production stack: pulls pre-built images from GHCR instead of building from
+# source. Every image here was published by CI only after the three-way
+# differential harness, the test suite, ruff and the no-provider-SDK guard
+# passed on that commit (.github/workflows/ci.yml).
+#
+#   cp .env.example .env      # then fill in real secrets
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Pin a release rather than tracking main by setting HOOKGUARD_TAG to a commit
+# digest tag, e.g. HOOKGUARD_TAG=sha-<full-40-char-sha>. `latest` follows main.
+# HOOKGUARD_IMAGE_PREFIX lets a fork or a private mirror substitute its own
+# registry without editing this file.
+
+services:
+  # The protected application. NOTE: this is the *sample* upstream -- it
+  # verifies the Gateway signature and nothing else. Replace this service with
+  # your real application (any language: it only has to check one HMAC) and
+  # repoint the `upstream` URLs in config.docker.json at it.
+  #
+  # It has no `ports:` mapping and never gets one.
+  upstream:
+    image: ${HOOKGUARD_IMAGE_PREFIX:-ghcr.io/prateeks16/hookguard-py}/upstream:${HOOKGUARD_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+    networks: [internal]
+
+  # The only surface exposed to the internet. Terminate TLS in front of it --
+  # it serves plain HTTP and providers POST to an https:// URL.
+  gateway:
+    image: ${HOOKGUARD_IMAGE_PREFIX:-ghcr.io/prateeks16/hookguard-py}/gateway:${HOOKGUARD_TAG:-latest}
+    restart: unless-stopped
+    depends_on: [upstream]
+    ports:
+      - "9000:9000"
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+      STRIPE_SECRET: ${STRIPE_SECRET:?set STRIPE_SECRET}
+      GITHUB_SECRET: ${GITHUB_SECRET:?set GITHUB_SECRET}
+      SHOPIFY_SECRET: ${SHOPIFY_SECRET:?set SHOPIFY_SECRET}
+      EVENTS_URL: http://console:7000/api/v1/ingest
+    volumes:
+      - ./config.docker.json:/config.json:ro
+    networks: [internal]
+
+  # The admin dashboard. Optional -- remove it and the gateway and upstream
+  # behave identically. Treat it as an admin surface, not a public page: put it
+  # behind the same TLS proxy and consider restricting it to a VPN or an IP
+  # allowlist. TLS is not optional here: the session cookie is Secure, so
+  # sign-in does not work over plain HTTP at all.
+  console:
+    image: ${HOOKGUARD_IMAGE_PREFIX:-ghcr.io/prateeks16/hookguard-py}/console:${HOOKGUARD_TAG:-latest}
+    restart: unless-stopped
+    depends_on: [gateway]
+    ports:
+      - "7000:7000"
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+      CONSOLE_DATA_DIR: /data
+      # Closed by default. There is no auto-close-after-first-user logic, so
+      # this must be flipped back after bootstrapping the admin account.
+      CONSOLE_ALLOW_SIGNUP: "false"
+    volumes:
+      - console-data:/data
+    networks: [internal]
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  console-data:

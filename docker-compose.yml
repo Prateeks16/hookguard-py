@@ -1,0 +1,72 @@
+# Build-from-source stack, for development and for reading.
+#
+#   cp .env.example .env        # then fill in real secrets
+#   docker compose up --build
+
+services:
+  # The protected application. Note: NO `ports:` mapping -- it is never
+  # published to the host or the internet. Only the gateway, sharing the
+  # internal network, can reach it. That is the network half of the trust
+  # boundary; the Gateway signature is the cryptographic half, and it stands
+  # even if this network assumption ever fails.
+  upstream:
+    build:
+      context: .
+      dockerfile: docker/upstream.Dockerfile
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+    networks: [internal]
+
+  # The only exposed surface. Verifies provider signatures, attaches the
+  # Gateway signature, forwards to the upstream by service name over the
+  # internal network.
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/gateway.Dockerfile
+    depends_on: [upstream]
+    ports:
+      - "9000:9000"
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+      STRIPE_SECRET: ${STRIPE_SECRET:?set STRIPE_SECRET}
+      GITHUB_SECRET: ${GITHUB_SECRET:?set GITHUB_SECRET}
+      SHOPIFY_SECRET: ${SHOPIFY_SECRET:?set SHOPIFY_SECRET}
+      # Optional. Unset, the gateway's verify path is exactly what it is
+      # without telemetry -- set here so the bundled Console has real data.
+      EVENTS_URL: http://console:7000/api/v1/ingest
+    volumes:
+      - ./config.docker.json:/config.json:ro
+    networks: [internal]
+
+  # The dashboard. Optional: remove this service and the gateway and upstream
+  # behave identically.
+  #
+  # Reachable at http://localhost:7000 for local use. Note that signing in
+  # will NOT work over plain HTTP on any other host -- the session cookie is
+  # Secure, so a browser will not send it back. Put TLS in front of it for
+  # anything beyond localhost (PRODUCTION.md).
+  console:
+    build:
+      context: .
+      dockerfile: docker/console.Dockerfile
+    depends_on: [gateway]
+    ports:
+      - "7000:7000"
+    environment:
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?set INTERNAL_SECRET}
+      CONSOLE_DATA_DIR: /data
+      # Closed by default. There is no auto-close-after-first-user logic, so
+      # this must be flipped back after bootstrapping the admin account or
+      # signup stays open indefinitely.
+      CONSOLE_ALLOW_SIGNUP: "false"
+    volumes:
+      - console-data:/data
+    networks: [internal]
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  console-data:

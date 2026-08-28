@@ -1,0 +1,40 @@
+# The Console: landing page, playground, and the authenticated dashboard.
+#
+#   fly volumes create console_data --app hookguard-py-console --size 1 --region sin
+#   fly deploy --config fly/console.toml
+#
+# The volume holds one SQLite file (users, sessions, routes, events). Back it up
+# by copying that one file.
+#
+# force_https matters more here than anywhere else: the session cookie is
+# Secure, so sign-in does not work over plain HTTP at all.
+
+app = "hookguard-py-console"
+primary_region = "sin"
+
+[build]
+  dockerfile = "docker/console.Dockerfile"
+
+[env]
+  CONSOLE_DATA_DIR = "/data"
+  # Closed by default. Flip to "true" once to bootstrap the admin account,
+  # then back -- there is no auto-close-after-first-user logic.
+  CONSOLE_ALLOW_SIGNUP = "false"
+
+[mounts]
+  source = "console_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 7000
+  force_https = true
+  # This one keeps a machine warm: SQLite and the SSE log stream both prefer a
+  # process that stays up, and a cold start on a link someone was sent is a bad
+  # first impression.
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

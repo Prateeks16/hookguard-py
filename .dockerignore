@@ -1,14 +1,22 @@
 .git
 .github
 docs
-*.md
 .env
 .venv
 tests
+dist
+build
+*.egg-info
 __pycache__
 .pytest_cache
 .ruff_cache
 
+# Markdown is excluded to keep the build context small, EXCEPT README.md:
+# pyproject.toml declares `readme = "README.md"`, so the build fails outright
+# without it. The Dockerfiles copy it explicitly for that reason.
+*.md
+!README.md
+
 # The Go oracle is test-only and must never enter a published image.
-# CI asserts this (see .github/workflows/ci.yml, job: guards).
+# CI asserts this (.github/workflows/ci.yml, job: images).
 oracle

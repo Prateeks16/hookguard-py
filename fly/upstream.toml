@@ -1,0 +1,25 @@
+# The protected application. NOTE: no [http_service] and no public IP -- this
+# app is deliberately unreachable from the internet. It listens on :8080 and is
+# reachable only over Fly's private IPv6 network at
+# hookguard-py-upstream.internal:8080, and only by apps in this org.
+#
+# That is the network half of the trust boundary in Fly's terms rather than
+# Docker's: the gateway is the only exposed surface, and the Gateway signature
+# is the cryptographic half that stands even if this assumption fails.
+#
+#   fly deploy --config fly/upstream.toml
+#
+# Never run `fly ips allocate` on this app.
+
+app = "hookguard-py-upstream"
+primary_region = "sin"
+
+[build]
+  dockerfile = "docker/upstream.Dockerfile"
+
+[env]
+  # INTERNAL_SECRET is set with `fly secrets set`, never here.
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

@@ -64,10 +64,9 @@ packages = [
 ]
 
 # Templates, static assets and the SQL migration were go:embed'ed into the Go
-# binary. Here they ride along as package data instead.
-[tool.hatch.build.targets.wheel.force-include]
-"src/hookguard_console/ui" = "hookguard_console/ui"
-"src/hookguard_console/store/migrations" = "hookguard_console/store/migrations"
+# binary. Here they are package data, and hatchling already ships everything
+# inside a listed package -- a force-include for them duplicated each file and
+# made the wheel build fail outright, which would have broken every image.
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

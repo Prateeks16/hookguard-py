@@ -139,3 +139,109 @@ jobs:
 
       - name: Assert the packages import without the dev extras
         run: python -c "import hookguard_core, hookguard_gateway; print('ok')"
+
+  # A wheel that builds is not the same as a wheel that works. The templates,
+  # static assets and SQL migration are package data, and an editable install
+  # reads them straight from src/ -- so a packaging mistake is invisible in
+  # development and breaks every image. This job installs the built wheel into
+  # a clean environment and renders a page from it.
+  package:
+    name: Wheel carries its assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install --upgrade pip build
+      - name: Build the wheel
+        run: python -m build --wheel --outdir dist .
+      - name: Install it clean and render from the installed package
+        run: |
+          python -m venv /tmp/clean
+          /tmp/clean/bin/pip install --quiet "$(echo dist/*.whl)[console]"
+          cd /tmp
+          /tmp/clean/bin/python - <<'PY'
+          import pathlib
+          import hookguard_console
+          from hookguard_console.templating import build_environment
+          from hookguard_console.store import open_store
+
+          location = pathlib.Path(hookguard_console.__file__).parent
+          assert "site-packages" in str(location), f"not the installed copy: {location}"
+
+          html = build_environment().get_template("pages/login.html").render(
+              version="ci", error="", next="/"
+          )
+          assert "<!doctype html>" in html, "template did not render"
+
+          store = open_store("ci-smoke.db")
+          assert store.count_users() == 0, "schema did not apply"
+          store.close()
+          print("wheel renders and migrates from site-packages")
+          PY
+
+  images:
+    name: Images build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [gateway, console, upstream]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ${{ matrix.image }}
+        run: docker build -f docker/${{ matrix.image }}.Dockerfile -t hookguard-${{ matrix.image }} .
+      - name: Assert no Go artifact reached the image
+        run: |
+          if docker run --rm --entrypoint sh hookguard-${{ matrix.image }} -c 'ls /oracle 2>/dev/null || command -v go'; then
+            echo "::error::a Go artifact reached the ${{ matrix.image }} image"
+            exit 1
+          fi
+          echo "clean: no Go in the ${{ matrix.image }} image"
+
+  # Publishing is gated on every check above: an image that reaches the
+  # registry has cleared the three-way differential harness, the test suite,
+  # the lint pass, the packaging check and the dependency guards. Pull requests
+  # build images but never push one.
+  publish:
+    name: Publish images to GHCR
+    needs: [lint, test, oracle, differential, no-provider-sdk, package, images]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        image: [gateway, console, upstream]
+    steps:
+      - uses: actions/checkout@v4
+      # GHCR rejects uppercase path segments and this owner has them, so
+      # normalize rather than relying on a downstream action to do it.
+      - name: Compute lowercase image name
+        id: name
+        run: echo "value=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.image }}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Derive tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.name.outputs.value }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=long
+          labels: |
+            org.opencontainers.image.title=hookguard-${{ matrix.image }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/${{ matrix.image }}.Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

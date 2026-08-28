@@ -62,7 +62,7 @@ Ported in phases; see [MIGRATION.md](MIGRATION.md) for the full plan.
 | 4 | Console store (SQLite) | done |
 | 5 | Console auth (Argon2, sessions, CSRF) | done |
 | 6 | Console HTTP: routes, templates, ingest, retention | done |
-| 7 | Docker, compose, Fly, publish | not started |
+| 7 | Docker, compose, Fly, publish | done |
 | 8 | Documentation | not started |
 
 ## Development

@@ -1,0 +1,35 @@
+# The gateway: the only surface providers reach. Fly terminates TLS in front of
+# it (force_https), which is what the plain-HTTP listener expects -- exactly as
+# it would sit behind Caddy or a load balancer.
+#
+#   fly deploy --config fly/gateway.toml
+#
+# Public URL becomes https://hookguard-gateway.fly.dev/hook/<provider>.
+
+app = "hookguard-py-gateway"
+primary_region = "sin"
+
+[build]
+  dockerfile = "docker/gateway.Dockerfile"
+
+[env]
+  # Select the Fly routing table baked into the image, whose upstream URLs
+  # point at the private network rather than localhost or a Docker service.
+  CONFIG_PATH = "/config.fly.json"
+  EVENTS_URL = "http://hookguard-py-console.internal:7000/api/v1/ingest"
+
+[http_service]
+  internal_port = 9000
+  force_https = true
+  # Scale to zero when idle. A Python process cold-starts slower than the Go
+  # binary did -- roughly a second rather than milliseconds -- which is still
+  # inside every supported provider's timeout, but it is a real change and the
+  # reason to keep min_machines_running at 0 is cost, not speed.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  # Larger than the Go build's 256mb: an interpreter plus FastAPI needs it.
+  memory = "512mb"
