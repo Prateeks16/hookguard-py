@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "path": "/hook/stripe",
+      "provider": "stripe",
+      "upstream": "http://upstream:8080/stripe",
+      "replay_window": "5m",
+      "secret_env": "STRIPE_SECRET"
+    },
+    {
+      "path": "/hook/github",
+      "provider": "github",
+      "upstream": "http://upstream:8080/github",
+      "secret_env": "GITHUB_SECRET"
+    },
+    {
+      "path": "/hook/shopify",
+      "provider": "shopify",
+      "upstream": "http://upstream:8080/shopify",
+      "secret_env": "SHOPIFY_SECRET"
+    },
+    {
+      "path": "/hook/paypal",
+      "provider": "paypal",
+      "upstream": "http://upstream:8080/paypal",
+      "webhook_id": "WH-CHANGE-ME"
+    }
+  ]
+}

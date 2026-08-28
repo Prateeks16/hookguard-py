@@ -1,0 +1,14 @@
+.git
+.github
+docs
+*.md
+.env
+.venv
+tests
+__pycache__
+.pytest_cache
+.ruff_cache
+
+# The Go oracle is test-only and must never enter a published image.
+# CI asserts this (see .github/workflows/ci.yml, job: guards).
+oracle

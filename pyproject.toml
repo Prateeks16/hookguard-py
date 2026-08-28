@@ -1,0 +1,82 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hookguard"
+version = "1.0.0"
+description = "A self-hosted gateway that verifies inbound webhook signatures at the network edge and forwards only authenticated traffic to a protected application."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+authors = [{ name = "Prateek Sahu" }]
+
+# The core package (hookguard_core) is stdlib-only, exactly as the Go
+# internal/gatewaysig package was: hmac, hashlib, base64, json. Nothing here.
+dependencies = []
+
+# Go used two modules to keep the gateway's dependency graph clean. Python has
+# no module system to enforce that, so the separation lives here instead:
+# installing [gateway] must never pull a provider SDK. CI asserts it.
+[project.optional-dependencies]
+gateway = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "httpx>=0.28",
+  "cryptography>=44.0",
+]
+console = [
+  "hookguard[gateway]",
+  "jinja2>=3.1",
+  "argon2-cffi>=23.1",
+  "python-multipart>=0.0.20",
+]
+dev = [
+  "hookguard[console]",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.25",
+  "ruff>=0.9",
+  # Differential-harness oracles ONLY. Never a runtime dependency of either
+  # service -- the `no-provider-sdk` CI guard fails the build if one leaks.
+  "stripe>=11.0",
+  "ShopifyAPI>=12.7",
+]
+
+[project.scripts]
+hookguard-gateway = "hookguard_gateway.__main__:main"
+hookguard-console = "hookguard_console.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/hookguard_core",
+  "src/hookguard_gateway",
+  "src/hookguard_console",
+]
+
+# Templates, static assets and the SQL migration were go:embed'ed into the Go
+# binary. Here they ride along as package data instead.
+[tool.hatch.build.targets.wheel.force-include]
+"src/hookguard_console/ui" = "hookguard_console/ui"
+"src/hookguard_console/store/migrations" = "hookguard_console/store/migrations"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+markers = [
+  "differential: cross-implementation verdict agreement (the correctness proof)",
+]
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "RUF"]
+ignore = [
+  "S101",  # assert: pytest's whole idiom
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]  # hardcoded test secrets are the point

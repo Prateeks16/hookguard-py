@@ -1,0 +1,78 @@
+# The project's correctness claim is that each verifier agrees byte-for-byte
+# with the provider's own official library. In the Python port that claim is
+# carried by a three-way harness -- Python, the retained Go implementation
+# under oracle/, and the vendors' libraries -- all reading one committed
+# vector file. The `oracle` and `differential` jobs land in phase 3.
+#
+# The other invariant this workflow defends is the dependency split: a
+# provider SDK must never reach a shipped service, only the test suite.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install --upgrade pip && pip install -e ".[dev]"
+      - name: ruff check
+        run: ruff check .
+      - name: ruff format --check
+        run: ruff format --check .
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install --upgrade pip && pip install -e ".[dev]"
+      - name: pytest
+        run: pytest -v
+
+  # The Go build asserted this with `go list -deps . | grep -E 'stripe|go-github'`.
+  # The Python equivalent: install the service extras ALONE, then require the
+  # provider SDKs to be unimportable. If one ever becomes a runtime dependency
+  # instead of a test one, this fails loudly.
+  no-provider-sdk:
+    name: No provider SDK in a shipped service
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        extra: [gateway, console]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install --upgrade pip && pip install -e ".[${{ matrix.extra }}]"
+      - name: Assert the provider libraries are absent
+        run: |
+          python - <<'PY'
+          import importlib.util, sys
+          leaked = [m for m in ("stripe", "shopify", "github") if importlib.util.find_spec(m)]
+          if leaked:
+              print(f"::error::provider SDK reached the ${{ matrix.extra }} runtime: {leaked}")
+              sys.exit(1)
+          print("clean: no provider SDK importable")
+          PY
+
+      - name: Assert the packages import without the dev extras
+        run: python -c "import hookguard_core, hookguard_gateway; print('ok')"
