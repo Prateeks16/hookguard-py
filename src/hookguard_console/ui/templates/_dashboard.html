@@ -1,0 +1,57 @@
+{# Shared dashboard chrome: topbar, sidebar, status bar.
+
+   Go declared these as three named templates each page invoked by hand. Here
+   they are one layout the dashboard pages extend, which is the same structure
+   with the invocation removed.
+
+   The wording is deliberate. CONTEXT.md defines a Route as the binding of a
+   path to a verifier, an upstream and a replay window, and lists "endpoint" as
+   the word to avoid; the URLs still say endpoints because renaming those is a
+   separate change with real test churn, but what the operator reads matches
+   the project's own glossary. #}
+{% extends "_base.html" %}
+
+{% block body %}
+<div class="shell">
+  <header class="topbar">
+    <a class="topbar-brand" href="/dashboard"><span class="brand-mark" aria-hidden="true"></span>HookGuard<span class="topbar-version">v{{ version }}</span></a>
+    {% if connected %}<span class="live-dot" title="gateway connected">gateway :9000</span>
+    {% else %}<span class="live-dot live-dot-off" title="no signal from gateway">gateway :9000</span>{% endif %}
+    <span class="topbar-spacer"></span>
+    <span class="topbar-chip">self-hosted</span>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark/light theme">&#9788;/&#9790;</button>
+    <div class="topbar-user">
+      {% if user %}<span class="topbar-email">{{ user.email }}</span>
+      <a href="/dashboard/settings">Settings</a>
+      <form method="post" action="/logout" class="u-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Log out</button>
+      </form>{% endif %}
+    </div>
+  </header>
+
+  <div class="shell-body">
+    <aside class="sidebar">
+      <nav aria-label="Dashboard">
+        <a href="/dashboard" {% if nav_active == "overview" %}aria-current="page"{% endif %}>Overview</a>
+        <a href="/dashboard/logs" {% if nav_active == "logs" %}aria-current="page"{% endif %}>Live stream{% if connected %}<span class="nav-dot" aria-hidden="true"></span>{% endif %}</a>
+        <a href="/dashboard/endpoints" {% if nav_active == "endpoints" %}aria-current="page"{% endif %}>Routes</a>
+        <a href="/dashboard/providers" {% if nav_active == "providers" %}aria-current="page"{% endif %}>Providers</a>
+        <a href="/dashboard/settings" {% if nav_active == "settings" %}aria-current="page"{% endif %}>Settings</a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="sidebar-stat">{% if connected %}receiving events{% else %}no events yet{% endif %}</div>
+        {# The Go sidebar carried "binary deps: 0" here. That was true of a
+           static binary and is not true of this build, so it is gone rather
+           than restated with a number that would need a footnote. #}
+      </div>
+    </aside>
+
+    <main class="main">{% block main %}{% endblock %}</main>
+  </div>
+
+  <footer class="statusbar{% if not connected %} no-signal{% endif %}">
+    gateway: {% if connected %}connected{% else %}no signal from gateway{% endif %}{% if last_event_ago %} &middot; last event {{ last_event_ago }}{% endif %} &middot; v{{ version }}
+  </footer>
+</div>
+{% endblock %}

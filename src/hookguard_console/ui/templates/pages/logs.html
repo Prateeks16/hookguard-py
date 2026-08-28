@@ -1,0 +1,84 @@
+{% extends "_dashboard.html" %}
+{% block title %}Live Logs — HookGuard{% endblock %}
+{% block main %}
+        <div class="u-row-between">
+          <h1 class="page-title">Live Logs</h1>
+          <div>
+            <span id="paused-counter" class="badge" hidden></span>
+            <button type="button" id="pause-resume" class="btn">Pause</button>
+          </div>
+        </div>
+
+        <form method="get" action="/dashboard/logs" class="filter-form">
+          <select name="provider">
+            <option value="">All providers</option>
+            {% for value, label in [('stripe','Stripe'), ('github','GitHub'), ('shopify','Shopify'), ('paypal','PayPal')] %}
+            <option value="{{ value }}" {% if filter.provider == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <select name="verdict">
+            <option value="">Any verdict</option>
+            <option value="accepted" {% if filter.verdict == 'accepted' %}selected{% endif %}>Accepted</option>
+            <option value="rejected" {% if filter.verdict == 'rejected' %}selected{% endif %}>Rejected</option>
+          </select>
+          <input type="text" name="reason" placeholder="reason contains…" value="{{ filter.reason }}">
+          <input type="text" name="path" placeholder="path contains…" value="{{ filter.path }}">
+          <input type="datetime-local" name="from" value="{{ filter.from_value }}" aria-label="From">
+          <input type="datetime-local" name="to" value="{{ filter.to_value }}" aria-label="To">
+          <button type="submit" class="btn btn-primary">Filter</button>
+          <a class="btn" href="/dashboard/logs">Clear</a>
+        </form>
+
+        <div id="stream-error" class="banner banner-warn" hidden>Live stream reconnecting…</div>
+
+        {% if rows %}
+        <table class="data" id="logs-table" data-stream-url="{{ stream_url }}">
+          <thead>
+            <tr>
+              <th>Time</th><th>Provider</th><th>Path</th><th>Verdict</th><th>Reason</th>
+              <th>Upstream</th><th>Latency</th><th>Bytes</th><th>Remote IP</th>
+            </tr>
+          </thead>
+          <tbody id="logs-tbody">
+            {% for r in rows %}<tr class="log-row" tabindex="0"
+              data-id="{{ r.id }}" data-time="{{ r.time }}" data-provider="{{ r.provider }}" data-path="{{ r.path }}"
+              data-verdict="{{ r.verdict }}" data-reason="{{ r.reason }}" data-upstream-status="{{ r.upstream_status }}"
+              data-latency-ms="{{ r.latency_ms }}" data-body-bytes="{{ r.body_bytes }}" data-body-sha256="{{ r.body_sha256 }}"
+              data-remote-ip="{{ r.remote_ip }}">
+              <td>{{ r.time }}</td>
+              <td><span class="badge badge-provider-{{ r.provider }}">{{ r.provider }}</span></td>
+              <td><code>{{ r.path }}</code></td>
+              <td>{% if r.verdict == 'accepted' %}<span class="u-ok">&#10003; accepted</span>{% else %}<span class="u-reject">&#10007; rejected</span>{% endif %}</td>
+              <td>{{ r.reason }}</td>
+              <td>{{ r.upstream_status }}</td>
+              <td>{{ r.latency_ms }}ms</td>
+              <td>{{ r.body_bytes }}</td>
+              <td><code>{{ r.remote_ip }}</code></td>
+            </tr>{% endfor %}
+          </tbody>
+        </table>
+
+        <div id="log-drawer" class="drawer" hidden>
+          <button type="button" id="drawer-close" class="btn" aria-label="Close">&times;</button>
+          <h2>Event detail</h2>
+          <dl id="drawer-fields"></dl>
+          <p class="u-hint-xs">
+            Webhook bodies are never stored &mdash; only a SHA-256 of the body is kept, shown above.
+            No request headers are captured either; only the fields shown here are recorded.
+          </p>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <h3>No traffic at the gate yet.</h3>
+          <p>New events stream in here the moment one arrives &mdash; accepted or rejected, each with the reason it was judged that way.</p>
+          <table class="data" id="logs-table" data-stream-url="{{ stream_url }}" hidden>
+            <tbody id="logs-tbody"></tbody>
+          </table>
+        </div>
+        {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/htmx.min.js"></script>
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/logs.js"></script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "_dashboard.html" %}
+{% block title %}Routes — HookGuard{% endblock %}
+{% block main %}
+        <div class="u-row-between">
+          <h1 class="page-title">Routes</h1>
+          <div class="u-row-gap">
+            <a class="btn" href="/dashboard/endpoints/export">Export config.json</a>
+            <a class="btn btn-primary" href="/dashboard/endpoints/new">New route</a>
+          </div>
+        </div>
+
+        {% if not endpoints %}
+        <div class="empty-state">
+          <h3>No routes configured yet.</h3>
+          <p>A route binds an inbound path to one provider verifier, an upstream URL and a replay window. Add one, or seed from an existing gateway config.json with <code>hookguard-console seed-config &lt;path&gt;</code>.</p>
+        </div>
+        {% else %}
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Path</th><th>Provider</th><th>Upstream</th><th>Replay window</th>
+              <th>Secret env / webhook ID</th><th>Active</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in endpoints %}<tr>
+              <td><code>{{ e.path }}</code></td>
+              <td><span class="badge badge-provider-{{ e.provider }}">{{ e.provider }}</span></td>
+              <td>{{ e.upstream_url }}</td>
+              <td>{% if e.replay_window %}{{ e.replay_window }}{% else %}&mdash;{% endif %}</td>
+              <td>{% if e.provider == 'paypal' %}{{ e.webhook_id }}{% else %}{{ e.secret_env }}{% endif %}</td>
+              <td>
+                <form method="post" action="/dashboard/endpoints/{{ e.id }}/toggle-active" class="u-inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                  <button class="btn" type="submit">{% if e.active %}active{% else %}disabled{% endif %}</button>
+                </form>
+              </td>
+              <td class="u-nowrap">
+                <a class="btn" href="/dashboard/endpoints/{{ e.id }}/edit">Edit</a>
+                <button class="btn btn-danger" type="button"
+                  data-delete-endpoint
+                  data-endpoint-id="{{ e.id }}"
+                  data-endpoint-path="{{ e.path }}"
+                  data-csrf-token="{{ csrf_token }}">Delete</button>
+              </td>
+            </tr>{% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/endpoints.js"></script>
+{% endblock %}

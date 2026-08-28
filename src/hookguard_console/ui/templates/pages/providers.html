@@ -1,0 +1,60 @@
+{% extends "_dashboard.html" %}
+{% block title %}Providers — HookGuard{% endblock %}
+{% block main %}
+        <div class="u-row-between">
+          <h1 class="page-title">Providers</h1>
+          <div class="window-toggle" role="group" aria-label="Stats window">
+            <a class="btn{% if window == '24h' %} btn-primary{% endif %}" href="/dashboard/providers?window=24h">24h</a>
+            <a class="btn{% if window == '7d' %} btn-primary{% endif %}" href="/dashboard/providers?window=7d">7d</a>
+          </div>
+        </div>
+
+        <p class="u-muted u-mt0">
+          Four providers, four signature shapes. Each card is the setup guide for that
+          provider plus what it has actually sent in the last {{ window }}. Secrets live in
+          the environment &mdash; the route stores only the <em>name</em> of the variable,
+          never its value.
+        </p>
+
+        {% for p in providers %}
+        <section class="card provider-card">
+          <div class="provider-head">
+            <h2 class="u-m0">
+              <span class="badge badge-provider-{{ p.id }}">{{ p.id }}</span>
+              {{ p.name }}
+            </h2>
+            {# Built from the fixed provider list, never from request input. #}
+            <a class="btn" href="{{ p.logs_url }}">View in Live Logs</a>
+          </div>
+
+          <div class="statcards provider-stats">
+            <div class="statcard"><h3>Accepted</h3><div class="value">{{ p.stats.accepted }}</div></div>
+            <div class="statcard"><h3>Rejected</h3><div class="value">{{ p.stats.rejected }}</div></div>
+            <div class="statcard"><h3>Accept rate</h3><div class="value">{{ p.accept_rate }}</div></div>
+          </div>
+          {% if not p.has_traffic %}
+          <p class="u-hint">
+            No traffic from {{ p.name }} in the last {{ window }} &mdash; the numbers above are
+            counts, not a verdict on your configuration.
+          </p>
+          {% endif %}
+
+          <dl class="provider-facts">
+            <dt>Algorithm</dt><dd>{{ p.algorithm }}</dd>
+            <dt>Headers checked</dt><dd>{% for h in p.headers %}<code>{{ h }}</code> {% endfor %}</dd>
+            <dt>Where the value comes from</dt><dd>{{ p.secret_source }}</dd>
+            <dt>Route field</dt><dd><code>{{ p.config_field }}</code></dd>
+            <dt>Replay window</dt><dd>{{ p.replay_window }}</dd>
+            <dt>Rejection reasons you may see</dt>
+            <dd>{% for r in p.reject_reasons %}<span class="badge badge-reason">{{ r }}</span> {% endfor %}</dd>
+          </dl>
+
+          {% if p.checklist %}
+          <div class="banner banner-warn provider-checklist">
+            <strong>Before trusting real {{ p.name }} traffic</strong>
+            <ol>{% for item in p.checklist %}<li>{{ item }}</li>{% endfor %}</ol>
+          </div>
+          {% endif %}
+        </section>
+        {% endfor %}
+{% endblock %}

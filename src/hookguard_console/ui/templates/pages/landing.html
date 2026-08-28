@@ -1,0 +1,322 @@
+{% extends "_base.html" %}
+{% block title %}HookGuard — Every webhook checked at the gate.{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+{% block body %}
+  <header class="landing-header">
+    <a class="landing-brand" href="/"><span class="brand-mark" aria-hidden="true"></span>HookGuard</a>
+    <nav class="landing-nav" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#providers">Providers</a>
+      <a href="#security">Security</a>
+      <a href="#compare">Compare</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/playground">Playground</a>
+      <a href="https://github.com/Prateeks16/hookguard#readme">Docs</a>
+    </nav>
+    <div class="landing-header-actions">
+      <a class="signin" href="/login">Sign in</a>
+      <a class="btn btn-primary" href="/signup">Get started</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="hero-eyebrow">zero external dependencies in the shipped binary</span>
+        <h1>Every webhook checked at the gate.</h1>
+        <p class="hero-sub">HookGuard is a self-hosted gateway that verifies Stripe, GitHub, Shopify and PayPal webhook signatures at your network edge — and forwards only authenticated traffic to your app. Your app verifies one signature. HookGuard handles the other four.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary btn-lg" href="#quickstart">Deploy in 5 minutes</a>
+          <a class="btn btn-lg" href="#security">Read the correctness proof</a>
+        </div>
+      </div>
+    </section>
+
+    <div id="quickstart" class="terminal-strip">
+      <div class="terminal">
+        <p class="line"><span class="prompt">$</span> curl -X POST hooks.example.com/hook/stripe &hellip; <span class="ok">&rarr; 200 ok</span></p>
+        <p class="line"><span class="prompt">$</span> curl (tampered body) &hellip; <span class="reject">&rarr; 401 unauthorized</span></p>
+      </div>
+    </div>
+
+    <section class="proof-bar">
+      <div class="proof-bar-inner">
+        <div class="proof-chips">
+          <span class="proof-chip">0 external dependencies</span>
+          <span class="proof-chip">1 static binary</span>
+          <span class="proof-chip">4 providers, 4 signature shapes</span>
+          <span class="proof-chip">14/14 differential cases agree with official libraries</span>
+          <span class="proof-chip">100% self-hosted &mdash; payloads never leave your network</span>
+        </div>
+        <p class="proof-caption">Every number on this bar is checked in CI or reproducible with one command.</p>
+      </div>
+    </section>
+
+    <section id="features" class="landing-section">
+      <div class="landing-section-inner">
+        <h2>One gate. One signature. Zero guesswork.</h2>
+        <div class="steps">
+          <div class="step">
+            <span class="step-number">1</span>
+            <h3>Point providers at the gate.</h3>
+            <p>Stripe, GitHub, Shopify and PayPal POST to <code>https://hooks.you.com/hook/&lt;provider&gt;</code>.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <h3>The gateway checks the signature.</h3>
+            <p>Constant-time HMAC for the symmetric providers; RSA-SHA256 against PayPal's chain-validated certificate &mdash; over the raw bytes, never a re-serialized body.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">3</span>
+            <h3>Your app trusts one thing.</h3>
+            <p>Verified traffic is re-signed with a single Gateway signature and forwarded byte-identical. Everything else gets a 401 and a log line.</p>
+          </div>
+        </div>
+        <svg class="flow-diagram" viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow diagram: providers send webhooks to HookGuard on port 9000, which forwards verified traffic over the internal network to your app; your app is never directly reachable">
+          <rect x="10" y="45" width="140" height="50" rx="8" fill="none" stroke="var(--border)" stroke-width="2"/>
+          <text x="80" y="75" text-anchor="middle" font-family="var(--font-mono)" font-size="13" fill="var(--text)">Providers</text>
+          <line x1="150" y1="70" x2="220" y2="70" stroke="var(--border)" stroke-width="2" marker-end="url(#arrow)"/>
+          <rect x="220" y="35" width="160" height="70" rx="8" fill="none" stroke="var(--ok)" stroke-width="2"/>
+          <text x="300" y="65" text-anchor="middle" font-family="var(--font-mono)" font-size="13" fill="var(--ok)">HookGuard</text>
+          <text x="300" y="83" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ok)">:9000</text>
+          <line x1="380" y1="70" x2="450" y2="70" stroke="var(--border)" stroke-width="2" marker-end="url(#arrow)"/>
+          <rect x="450" y="10" width="260" height="120" rx="8" fill="none" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="580" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">internal network</text>
+          <rect x="480" y="55" width="200" height="50" rx="8" fill="none" stroke="var(--text)" stroke-width="2"/>
+          <text x="580" y="85" text-anchor="middle" font-family="var(--font-mono)" font-size="13" fill="var(--text)">Your app</text>
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="var(--border)"/>
+            </marker>
+          </defs>
+        </svg>
+        <p class="flow-caption">Your app is never exposed. Only the gate is.</p>
+      </div>
+    </section>
+
+    <section id="providers" class="landing-section">
+      <div class="landing-section-inner">
+        <h2>Four providers, four different locks.</h2>
+        <p class="section-sub">Every provider signs differently &mdash; different headers, algorithms, encodings, replay rules. HookGuard speaks each dialect so you don't have to.</p>
+        <div class="provider-grid">
+          <div class="provider-card">
+            <h3>Stripe</h3>
+            <dl>
+              <dt>Header</dt><dd>Stripe-Signature</dd>
+              <dt>Algorithm</dt><dd>HMAC-SHA256 hex</dd>
+              <dt>Shape</dt><dd>t=&hellip;,v1=&hellip; + replay window</dd>
+            </dl>
+          </div>
+          <div class="provider-card">
+            <h3>GitHub</h3>
+            <dl>
+              <dt>Header</dt><dd>X-Hub-Signature-256</dd>
+              <dt>Algorithm</dt><dd>HMAC-SHA256 hex</dd>
+              <dt>Shape</dt><dd>sha256= prefix</dd>
+            </dl>
+          </div>
+          <div class="provider-card">
+            <h3>Shopify</h3>
+            <dl>
+              <dt>Header</dt><dd>X-Shopify-Hmac-SHA256</dd>
+              <dt>Algorithm</dt><dd>HMAC-SHA256 base64</dd>
+            </dl>
+          </div>
+          <div class="provider-card">
+            <h3>PayPal</h3>
+            <dl>
+              <dt>Header</dt><dd>paypal-transmission-sig</dd>
+              <dt>Algorithm</dt><dd>asymmetric RSA-SHA256</dd>
+              <dt>Shape</dt><dd>cert fetched at runtime, host-pinned to *.paypal.com, chain-validated</dd>
+            </dl>
+            <span class="no-shared-secret">no shared secret</span>
+          </div>
+        </div>
+        <p class="landing-footnote">Need Twilio or Standard Webhooks? They're on the roadmap &rarr; <a href="https://github.com/Prateeks16/hookguard/issues">open an issue</a>.</p>
+      </div>
+    </section>
+
+    <section id="security" class="landing-section">
+      <div class="landing-section-inner">
+        <h2>A security tool you can audit in an afternoon.</h2>
+        <div class="security-columns">
+          <div class="security-col">
+            <h3>Zero dependencies, provably.</h3>
+            <div class="terminal">
+              <p class="line"><span class="prompt">$</span> go list -deps . | grep -E 'stripe|go-github'</p>
+              <p class="line">(nothing)</p>
+            </div>
+            <p>The shipped gateway imports only the Go standard library. Nothing to typosquat, nothing to vendor-audit, no supply chain but Go itself.</p>
+          </div>
+          <div class="security-col">
+            <h3>A published correctness harness.</h3>
+            <p>Each verifier's verdict is differentially tested against the provider's own official library, across valid, tampered and adversarial payloads. Incumbents don't ship this.</p>
+          </div>
+          <div class="security-col">
+            <h3>A real trust boundary.</h3>
+            <p>Cryptographic half: the Gateway signature binds the verified provider name &mdash; not a forgeable "X-Verified: true" header. Network half: your app has no published port.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compare" class="landing-section">
+      <div class="landing-section-inner">
+        <h2>Small on purpose.</h2>
+        <p class="section-sub">Hookdeck, Convoy and Svix are excellent &mdash; and big. HookGuard does one job at the edge, with nothing attached.</p>
+        <div class="compare-table-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="col-us">HookGuard</th>
+                <th>Hookdeck</th>
+                <th>Convoy</th>
+                <th>Svix</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Model</td>
+                <td class="col-us">self-hosted OSS</td>
+                <td>managed SaaS</td>
+                <td>OSS + cloud</td>
+                <td>OSS + cloud</td>
+              </tr>
+              <tr>
+                <td>Edge signature verification</td>
+                <td class="col-us">core product</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+              </tr>
+              <tr>
+                <td>Zero-dependency binary</td>
+                <td class="col-us">&#10003; (checked in CI)</td>
+                <td>n/a</td>
+                <td>&#10007; (Postgres + Redis)</td>
+                <td>&#10007;</td>
+              </tr>
+              <tr>
+                <td>Published differential correctness harness</td>
+                <td class="col-us">&#10003;</td>
+                <td>&#10007;</td>
+                <td>&#10007;</td>
+                <td>&#10007;</td>
+              </tr>
+              <tr>
+                <td>Durable queue / retry</td>
+                <td class="col-us">&#10007; &mdash; stateless by design</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+              </tr>
+              <tr>
+                <td>Providers verified</td>
+                <td class="col-us">4</td>
+                <td>100+</td>
+                <td>many</td>
+                <td>many</td>
+              </tr>
+              <tr>
+                <td>Payloads leave your network</td>
+                <td class="col-us">never</td>
+                <td>yes</td>
+                <td>no (self-host)</td>
+                <td>depends</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="landing-footnote">We are not the first verifying proxy, and we're honest about the &#10007; column: if you need durable delivery and a hundred providers, use Hookdeck. If you need a small, auditable gate you fully control, that's us.</p>
+      </div>
+    </section>
+
+    <section id="pricing" class="landing-section">
+      <div class="landing-section-inner">
+        <h2>Free. It's yours.</h2>
+        <div class="pricing-cards">
+          <div class="pricing-card">
+            <h3>Self-hosted (Open Source)</h3>
+            <p class="pricing-price">$0 forever</p>
+            <ul>
+              <li>All 4 providers</li>
+              <li>Differential correctness harness</li>
+              <li>Docker deploy</li>
+              <li>The Console dashboard</li>
+              <li>Community support</li>
+            </ul>
+            <a class="btn btn-primary" href="/signup">Deploy now</a>
+          </div>
+          <div class="pricing-card">
+            <span class="waitlist-badge">Waitlist</span>
+            <h3>HookGuard Cloud</h3>
+            <p class="pricing-price">Managed gate, zero ops</p>
+            <p class="u-hint u-mt0">Not built yet. Leave an email and we'll let you know if it happens &mdash; no signup wired up here, this is a mailto: link, not a form submission.</p>
+            <a class="btn" href="mailto:hello@hookguard.dev?subject=HookGuard%20Cloud%20waitlist">Join the waitlist</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="landing-section">
+        <div class="landing-section-inner cta-band-inner">
+          <h2>Put a gatekeeper on it.</h2>
+          <p class="section-sub">docker compose up and every webhook gets checked at the door.</p>
+          <a class="btn btn-primary btn-lg" href="/signup">Get started</a>
+          <div class="copy-block">
+            <code id="cta-copy-text">cp .env.example .env &amp;&amp; docker compose up --build</code>
+            <button type="button" data-copy-target="cta-copy-text">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <div class="footer-columns">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#providers">Providers</a></li>
+          <li><a href="#compare">Compare</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="/playground">Playground</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="https://github.com/Prateeks16/hookguard#readme">README</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/Prateeks16/hookguard">GitHub</a></li>
+          <li><a href="https://github.com/Prateeks16/hookguard/issues">Issues</a></li>
+          <li><a href="https://github.com/Prateeks16/hookguard/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li>Privacy: we host nothing of yours.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-signoff">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>Checked at the gate.</span>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark/light theme">&#9788;/&#9790;</button>
+    </div>
+  </footer>
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/landing.js"></script>
+{% endblock %}

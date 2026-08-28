@@ -1,0 +1,211 @@
+/* Design tokens — HookGuard Console. Source of truth: web/DESIGN.md §2.
+
+   The palette and type come from the UI mockup handoff: a neutral, dense,
+   terminal-adjacent dark surface where the only loud colour is a verdict —
+   green forwarded, red 401, amber replay. Dark is the default (this is a
+   developer tool); light is derived from the same structure so the existing
+   toggle keeps working, and is deliberately neutral rather than tinted.
+
+   Every token name here predates the re-skin and is kept: templates and
+   app.css reference them by name, so a re-skin changes values, never names. */
+
+:root {
+  /* Accent ramp. --green-400 is the mockup's verdict/brand green (#4FD18B);
+     the rest of the ramp is derived from it so the older --green-N references
+     scattered through app.css and landing.css still resolve to something
+     coherent. */
+  --green-50: #EAFBF2;
+  --green-100: #CFF5E2;
+  --green-200: #A5EDC9;
+  --green-300: #7BE3B0;
+  --green-400: #4FD18B;
+  --green-500: #35B975;
+  --green-600: #2A9B62;
+  --green-700: #227D4F;
+  --green-800: #1C5F3D;
+  --green-900: #14432B;
+  --green-950: #0B2418;
+
+  --accent-lime: #A9E88A;
+
+  /* Type. IBM Plex Sans for chrome, IBM Plex Mono for anything that also
+     exists in a header, a config file, or a log line — so the UI and the
+     terminal read as the same system.
+
+     The webfonts are NOT loaded: the Console sends `default-src 'self'` with
+     no exceptions (middleware.go), which blocks fonts.googleapis.com by
+     design. Naming the families here means they are used where a developer
+     already has them installed, and the system stack carries everyone else.
+     Self-hosting the woff2 files under static/fonts is the only way to
+     guarantee them, and would not require touching the CSP. */
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", "Consolas", monospace;
+
+  /* Type scale, rem. Tightened from the original scale to the mockups'
+     density: this is a console you read a lot of rows in, not a marketing
+     site. --text-4xl is the landing hero and the only large size. */
+  --text-xs: 0.6875rem;   /* 11px — uppercase mono column labels */
+  --text-sm: 0.78125rem;  /* 12.5px — secondary body, table cells */
+  --text-base: 0.875rem;  /* 14px — body */
+  --text-md: 1rem;        /* 16px — card headings */
+  --text-lg: 1.125rem;    /* 18px — page titles */
+  --text-xl: 1.375rem;    /* 22px */
+  --text-2xl: 1.625rem;   /* 26px — stat values */
+  --text-3xl: 2.25rem;    /* 36px */
+  --text-4xl: 3.125rem;   /* 50px — landing hero */
+
+  /* Spacing — 4px base grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 22px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Radii — smaller than before, matching the mockups' restraint */
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --radius-panel: 12px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --duration-ui: 150ms;
+  --duration-hero: 240ms;
+
+  /* Focus ring */
+  --focus-ring-color: var(--green-400);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  --shadow-card: 0 1px 2px rgb(8 9 12 / .10), 0 8px 24px rgb(8 9 12 / .14);
+}
+
+/* Dark is the default. Values are the mockups' verbatim. */
+:root,
+:root:not([data-theme="light"]) {
+  /* Neutral ink ramp. The names are historical (they used to be green-tinted);
+     the values are now the mockups' neutral blue-greys. */
+  --ink-950: #08090C;  /* deepest — sidebar, table header, code wells */
+  --ink-900: #0C0E11;  /* card / main surface */
+  --ink-800: #12151A;  /* hover */
+  --ink-700: #232830;  /* solid border */
+  --ink-400: #5F6772;  /* dimmest legible text */
+  --ink-300: #8B939F;  /* muted text */
+  --ink-100: #E6E8EC;  /* primary text */
+
+  --bg: var(--ink-950);
+  --surface: var(--ink-900);
+  --surface-raised: var(--ink-800);
+  --border: var(--ink-700);
+  --text: var(--ink-100);
+  --text-muted: var(--ink-300);
+  --text-disabled: var(--ink-400);
+
+  /* Added by the re-skin. --bg-deep is the surface *under* a card (the
+     mockups invert the usual relationship: chrome is darker than content).
+     --hairline is the 1px rgba divider used between dense rows, which reads
+     correctly over both --bg and --surface where a solid border would not. */
+  --bg-deep: #08090C;
+  --text-dim: var(--ink-400);
+  --border-strong: #39404A;
+  --hairline: rgba(255, 255, 255, 0.07);
+
+  /* Semantic — the only loud colours in the system */
+  --ok: #4FD18B;
+  --reject: #FF6B6B;
+  --warn: #F0B45E;
+  --info: #7AA2F7;
+}
+
+/* Light is derived, not designed: same structure, neutral rather than tinted,
+   with the semantic colours darkened for contrast against white. No mockup
+   pins these, so they are chosen to hold the same relationships. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --paper: #FBFBFC;
+    --card: #FFFFFF;
+
+    --bg: var(--paper);
+    --surface: var(--card);
+    --surface-raised: #F4F5F7;
+    --border: #E3E5EA;
+    --text: #14161A;
+    --text-muted: #5B626D;
+    --text-disabled: #858C98;
+
+    --bg-deep: #F4F5F7;
+    --text-dim: #858C98;
+    --border-strong: #CDD1D9;
+    --hairline: rgba(20, 22, 26, 0.09);
+
+    --ok: #1A9D63;
+    --reject: #D94141;
+    --warn: #B8791F;
+    --info: #2F6FD0;
+  }
+}
+
+[data-theme="light"] {
+  --paper: #FBFBFC;
+  --card: #FFFFFF;
+
+  --bg: var(--paper);
+  --surface: var(--card);
+  --surface-raised: #F4F5F7;
+  --border: #E3E5EA;
+  --text: #14161A;
+  --text-muted: #5B626D;
+  --text-disabled: #858C98;
+
+  --bg-deep: #F4F5F7;
+  --text-dim: #858C98;
+  --border-strong: #CDD1D9;
+  --hairline: rgba(20, 22, 26, 0.09);
+
+  --ok: #1A9D63;
+  --reject: #D94141;
+  --warn: #B8791F;
+  --info: #2F6FD0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-ui: 0ms;
+    --duration-hero: 0ms;
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  /* tnum keeps counts and latencies from jittering as they stream in. */
+  font-feature-settings: "tnum";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The brand mark. Shared primitive: it appears in the dashboard top bar, the
+   landing header and footer, the playground, and the auth pages — which are
+   served by three different stylesheets — so it lives here with the tokens
+   rather than in any one of them. */
+.brand-mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--ok);
+  flex: none;
+  display: inline-block;
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}

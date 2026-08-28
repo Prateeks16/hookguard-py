@@ -1,0 +1,117 @@
+{% extends "_dashboard.html" %}
+{% block title %}Settings — HookGuard{% endblock %}
+{% block main %}
+        <h1 class="page-title">Settings</h1>
+
+        <section class="card">
+          <h2>Profile</h2>
+          <p>Signed in as <strong>{{ user.email }}</strong> {% if user.role == 'admin' %}<span class="badge badge-admin">admin</span>{% endif %}</p>
+
+          <h3 class="u-hint">Change password</h3>
+          {% if password_error %}<p class="u-reject">{{ password_error }}</p>{% endif %}
+          {% if password_ok %}<p class="u-ok">{{ password_ok }}</p>{% endif %}
+          <form method="post" action="/dashboard/settings/password">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="field"><label>Current password<input type="password" name="current_password" required></label></div>
+            <div class="field"><label>New password (12&ndash;128 characters)<input type="password" name="new_password" minlength="12" maxlength="128" required></label></div>
+            <div class="field"><label>Confirm new password<input type="password" name="new_password_confirm" minlength="12" maxlength="128" required></label></div>
+            <button class="btn btn-primary" type="submit">Change password</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <h2>Sessions</h2>
+          <table class="data">
+            <thead><tr><th>Created</th><th>Last seen</th><th>IP</th><th>User agent</th><th></th></tr></thead>
+            <tbody>
+              {% for s in sessions %}<tr>
+                <td>{{ s.created_at }}</td>
+                <td>{{ s.last_seen_at }}</td>
+                <td>{{ s.ip }}</td>
+                <td>{{ s.user_agent }}</td>
+                <td>
+                  {% if s.id == current_session_id %}<span class="badge">this session</span>{% endif %}
+                  <form method="post" action="/dashboard/settings/sessions/{{ s.id }}/revoke" class="u-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button class="btn btn-danger" type="submit">Revoke</button>
+                  </form>
+                </td>
+              </tr>{% endfor %}
+            </tbody>
+          </table>
+          <form method="post" action="/dashboard/settings/sessions/revoke-others" class="u-mt-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="btn btn-danger" type="submit">Revoke all other sessions</button>
+          </form>
+        </section>
+
+        {% if user.role == 'admin' %}<section class="card">
+          <h2>Users</h2>
+          {% if user_error %}<p class="u-reject">{{ user_error }}</p>{% endif %}
+          <table class="data">
+            <thead><tr><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th></th></tr></thead>
+            <tbody>
+              {% for u in users %}<tr>
+                <td>{{ u.email }}</td>
+                <td>{{ u.role }}</td>
+                <td>{% if u.active %}active{% else %}deactivated{% endif %}</td>
+                <td>{{ u.created_at }}</td>
+                <td>
+                  <form method="post" action="/dashboard/settings/users/{{ u.id }}/deactivate" class="u-inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button class="btn" type="submit">{% if u.active %}Deactivate{% else %}Reactivate{% endif %}</button>
+                  </form>
+                </td>
+              </tr>{% endfor %}
+            </tbody>
+          </table>
+
+          <h3 class="u-hint">Create user</h3>
+          <form method="post" action="/dashboard/settings/users">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="field"><label>Email<input type="email" name="email" required></label></div>
+            <div class="field"><label>Temporary password (12&ndash;128 characters)<input type="password" name="password" minlength="12" maxlength="128" required></label></div>
+            <div class="field">
+              <label>Role
+                <select name="role"><option value="member">member</option><option value="admin">admin</option></select>
+              </label>
+            </div>
+            <button class="btn btn-primary" type="submit">Create user</button>
+          </form>
+        </section>{% endif %}
+
+        <section class="card">
+          <h2>Instance</h2>
+          {% if retention_error %}<p class="u-reject">{{ retention_error }}</p>{% endif %}
+          <form method="post" action="/dashboard/settings/retention">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="field">
+              <label>Event retention window (days)<input type="number" name="retention_days" min="1" value="{{ retention_days }}" required></label>
+            </div>
+            <p class="u-hint">A nightly job deletes raw events older than this window. Rollup aggregates (used by Overview and charts) are kept regardless.</p>
+            <button class="btn btn-primary" type="submit">Save</button>
+          </form>
+
+          <h3 class="u-hint">Facts</h3>
+          <dl>
+            <dt>Data file location</dt><dd><code>{{ data_dir }}</code></dd>
+            <dt>Version</dt><dd>{{ version }}</dd>
+            <dt>Production checklist</dt><dd>See PRODUCTION.md in the repo.</dd>
+          </dl>
+
+          <h3 class="u-hint">Rotating the internal secret</h3>
+          <p class="u-hint">Rotate INTERNAL_SECRET by updating it in your deployment's environment and restarting both the gateway and Console &mdash; it is never stored here.</p>
+        </section>
+
+        <section class="card">
+          <h2>Security log</h2>
+          <table class="data">
+            <thead><tr><th>Time</th><th>Kind</th><th>Email</th><th>IP</th></tr></thead>
+            <tbody>
+              {% for a in auth_events %}<tr>
+                <td>{{ a.at }}</td><td>{{ a.kind }}</td><td>{{ a.email }}</td><td>{{ a.ip }}</td>
+              </tr>{% endfor %}
+            </tbody>
+          </table>
+        </section>
+{% endblock %}

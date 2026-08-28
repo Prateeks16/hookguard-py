@@ -1,0 +1,14 @@
+{% extends "_dashboard.html" %}
+{% block title %}Export config.json — HookGuard{% endblock %}
+{% block main %}
+        <h1 class="page-title">Export config.json</h1>
+        <p class="u-muted">This is the gateway config the Console would generate from active routes right now.</p>
+
+        <section class="card">
+          <pre class="u-code-block">{{ config_json }}</pre>
+          <a class="btn btn-primary" href="/dashboard/endpoints/export/download">Download config.json</a>
+          <a class="btn" href="/dashboard/endpoints">Back to routes</a>
+        </section>
+
+        <p class="u-warn">config.json ready. Restart the gateway to apply.</p>
+{% endblock %}

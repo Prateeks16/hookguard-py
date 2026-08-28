@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+{% block title %}Sign up — HookGuard{% endblock %}
+{% block body_class %} class="auth-body"{% endblock %}
+{% block body %}
+  <main class="auth">
+    <a class="auth-brand" href="/"><span class="brand-mark" aria-hidden="true"></span>HookGuard</a>
+    <div class="card auth-card">
+      <h1 class="page-title">Create your account</h1>
+      {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
+      <form method="post" action="/signup">
+        <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required autofocus></div>
+        <div class="field"><label for="password">Password (12&ndash;128 characters)</label><input id="password" type="password" name="password" minlength="12" maxlength="128" required></div>
+        <div class="field"><label for="password_confirm">Confirm password</label><input id="password_confirm" type="password" name="password_confirm" minlength="12" maxlength="128" required></div>
+        <button class="btn btn-primary" type="submit">Create account</button>
+      </form>
+    </div>
+    <p class="auth-alt"><a href="/login">Already have an account?</a></p>
+  </main>
+{% endblock %}

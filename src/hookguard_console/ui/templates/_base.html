@@ -1,0 +1,24 @@
+{# The page skeleton every template extends.
+
+   Go repeated this head in all fifteen templates because html/template has no
+   inheritance worth using. Jinja2 does, so it lives here once.
+
+   The favicon is a real file rather than the data: URI the Go build used: the
+   Console's CSP is `default-src 'self'` with no exceptions, and img-src falls
+   back to it, so a data: URI is blocked and the tab shows no icon at all. #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HookGuard{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  {% block head %}{% endblock %}
+</head>
+<body{% block body_class %}{% endblock %}>
+{% block body %}{% endblock %}
+{% block scripts %}<script src="/static/js/theme.js"></script>{% endblock %}
+</body>
+</html>

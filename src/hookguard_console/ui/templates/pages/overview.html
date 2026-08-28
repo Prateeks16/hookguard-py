@@ -1,0 +1,74 @@
+{% extends "_dashboard.html" %}
+{% block title %}Overview — HookGuard{% endblock %}
+{% block main %}
+        <div class="u-row-between">
+          <h1 class="page-title">Overview</h1>
+          {% if has_any_event %}
+          <div class="window-toggle" role="group" aria-label="Chart window">
+            <a class="btn{% if window == '24h' %} btn-primary{% endif %}" href="/dashboard?window=24h">24h</a>
+            <a class="btn{% if window == '7d' %} btn-primary{% endif %}" href="/dashboard?window=7d">7d</a>
+          </div>
+          {% endif %}
+        </div>
+
+        {# `window` is one of two server-chosen literals, never the raw
+           querystring -- see the invariant test in test_routes.py. #}
+        <div id="statcards" class="statcards" hx-get="/api/v1/stats/summary?window={{ window }}" hx-trigger="every 30s" hx-swap="none">
+          <div class="statcard"><h3>Accepted ({{ window }})</h3><div class="value" data-stat="accepted">{{ accepted }}</div></div>
+          <div class="statcard"><h3>Rejected ({{ window }})</h3><div class="value" data-stat="rejected">{{ rejected }}</div></div>
+          <div class="statcard"><h3>Accept rate</h3><div class="value" data-stat="accept_rate">{{ accept_rate_pct }}</div></div>
+          <div class="statcard"><h3>p50 verify+forward latency</h3><div class="value" data-stat="p50_latency_ms">{% if has_any_event %}{{ p50_latency_ms }}{% else %}&mdash;{% endif %}</div></div>
+        </div>
+
+        {% if has_any_event %}
+        <section class="card">
+          <h2>Events per hour ({{ window }})</h2>
+          <p class="u-hint-xs">
+            <span class="u-ok">&#9632;</span> accepted &nbsp;
+            <span class="u-reject">&#9632;</span> rejected
+          </p>
+          {# Built server-side from integers only; see overview_chart.py. #}
+          {{ chart_svg | safe }}
+        </section>
+
+        <section class="card">
+          <h2>Recent rejections</h2>
+          {% if recent_rejected %}
+          <table class="data">
+            <thead>
+              <tr><th>Time</th><th>Provider</th><th>Path</th><th>Reason</th><th>Remote IP</th></tr>
+            </thead>
+            <tbody>
+              {% for row in recent_rejected %}<tr>
+                <td>{{ row.time }}</td>
+                <td><span class="badge badge-provider-{{ row.provider }}">{{ row.provider }}</span></td>
+                <td><code>{{ row.path }}</code></td>
+                <td class="u-reject">{{ row.reason }}</td>
+                <td><code>{{ row.remote_ip }}</code></td>
+              </tr>{% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p class="u-muted">No rejections in this window.</p>
+          {% endif %}
+        </section>
+        {% else %}
+        <div class="empty-state">
+          <h3>No traffic at the gate yet.</h3>
+          <p>The gateway is listening and its routes are loaded &mdash; nothing has arrived. At this stage that usually means the provider is still pointed at your app rather than at the gateway. Fire a test webhook:</p>
+          <pre>SECRET=whsec_change-me                 # must match STRIPE_SECRET
+BODY='{"id":"evt_1","amount":4242}'
+TS=$(date +%s)
+SIG=$(printf '%s' "$TS.$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $NF}')
+
+curl -s -X POST localhost:9000/hook/stripe \
+  -H "Stripe-Signature: t=$TS,v1=$SIG" \
+  --data "$BODY"</pre>
+        </div>
+        {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/htmx.min.js"></script>
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/overview.js"></script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "_dashboard.html" %}
+{% block title %}{% if is_new %}New route{% else %}Edit route{% endif %} — HookGuard{% endblock %}
+{% block main %}
+        <h1 class="page-title">{% if is_new %}New route{% else %}Edit route{% endif %}</h1>
+
+        {% if form_error %}<p class="u-reject">{{ form_error }}</p>{% endif %}
+
+        <section class="card u-narrow">
+          <form method="post" action="{% if is_new %}/dashboard/endpoints{% else %}/dashboard/endpoints/{{ endpoint.id }}{% endif %}"
+                {% if not is_new %}hx-put="/dashboard/endpoints/{{ endpoint.id }}" hx-target="body"{% endif %}>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+            <div class="field">
+              <label>Path<input type="text" name="path" value="{{ endpoint.path }}" placeholder="/hook/stripe" required></label>
+            </div>
+
+            <div class="field">
+              <label>Provider
+                <select name="provider" id="provider-select" data-provider-select>
+                  {% for p in ['stripe', 'github', 'shopify', 'paypal'] %}
+                  <option value="{{ p }}" {% if endpoint.provider == p %}selected{% endif %}>{{ p }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+            </div>
+
+            <div class="field">
+              <label>Upstream URL<input type="url" name="upstream_url" value="{{ endpoint.upstream_url }}" placeholder="http://localhost:8080/stripe" required></label>
+            </div>
+
+            {# A class, not an inline style: the CSP blocks style attributes, so
+               the Go build's server-rendered initial state never applied and
+               every field showed until the select was touched. endpoints.js
+               toggles this same class. #}
+            <div class="field{% if endpoint.provider == 'paypal' %} u-hidden{% endif %}" data-provider-field="secret">
+              <label>Secret environment variable name<input type="text" name="secret_env" value="{{ endpoint.secret_env }}" placeholder="STRIPE_SECRET"></label>
+              <p class="u-hint-xs"><strong>The secret itself is never entered here</strong> &mdash; only the name of the environment variable the gateway process reads it from.</p>
+            </div>
+
+            <div class="field{% if endpoint.provider != 'stripe' %} u-hidden{% endif %}" data-provider-field="replay">
+              <label>Replay window<input type="text" name="replay_window" value="{% if endpoint.replay_window %}{{ endpoint.replay_window }}{% else %}5m{% endif %}" placeholder="5m"></label>
+              <p class="u-hint-xs">Go duration string, e.g. "5m". Leave blank to disable the replay check.</p>
+            </div>
+
+            <div class="field{% if endpoint.provider != 'paypal' %} u-hidden{% endif %}" data-provider-field="webhook">
+              <label>Webhook ID (subscription ID &mdash; config, not a secret)<input type="text" name="webhook_id" value="{{ endpoint.webhook_id }}" placeholder="WH-..."></label>
+            </div>
+
+            <button class="btn btn-primary" type="submit">{% if is_new %}Create route{% else %}Save changes{% endif %}</button>
+            <a class="btn" href="/dashboard/endpoints">Cancel</a>
+          </form>
+        </section>
+{% endblock %}
+{% block scripts %}
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/htmx.min.js"></script>
+  <script src="/static/js/endpoints.js"></script>
+{% endblock %}
