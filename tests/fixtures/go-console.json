@@ -1,0 +1,15 @@
+{
+  "_comment": "Written by the Go console's own store and auth packages. See tests/fixtures/README.md.",
+  "admin_email": "Admin@Example.com",
+  "admin_hash": "$argon2id$v=19$m=65536,t=3,p=2$fdQzxnW3zFqB8rT7umm1+g$p+e50rfpkXx7oNMh2U6wa0FiX2dKpaLgZZtxaKpOo28",
+  "admin_id": 1,
+  "admin_password": "correct-horse-battery-staple",
+  "base_ms": 1767225600000,
+  "hour": 490896,
+  "member_email": "member@example.com",
+  "member_id": 2,
+  "retention_days": 45,
+  "session_csrf": "tycUK6H9AuI4aPZCpPXBi-uVzryjtcfrHd9cH9ECVSo",
+  "session_id": 1,
+  "session_token": "3oUGcu30WEZb5YEOA8RbNGXeoDZTRL39A8j7qgNoeG4"
+}

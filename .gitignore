@@ -14,5 +14,9 @@ build/
 *.db-wal
 *.db-shm
 
+# ...except the Go-written interoperability fixture, which is committed on
+# purpose: it is what proves a database from the Go console reads here.
+!tests/fixtures/*.db
+
 # secrets
 .env

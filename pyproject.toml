@@ -90,3 +90,13 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S105", "S106"]  # hardcoded test secrets are the point
+
+# S608 flags f-string interpolation into SQL. In this package the only thing
+# ever interpolated is a module-level column-list constant; every value goes
+# through a `?` placeholder, including the LIKE patterns, which are also
+# escaped (see like_escape). Audited rather than assumed -- and scoped to this
+# package alone, so the check still applies everywhere else.
+#
+# S105 flags AuthEventKind.PASSWORD_CHANGE as a hardcoded password. It is the
+# string "pw_change", an event kind written to the security log.
+"src/hookguard_console/store/*.py" = ["S608", "S105"]

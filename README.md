@@ -59,7 +59,7 @@ Ported in phases; see [MIGRATION.md](MIGRATION.md) for the full plan.
 | 1 | Shared core (`gatewaysig`, event schema, Go durations) | done |
 | 2 | Gateway: config, verifiers, four providers, forwarding | done |
 | 3 | Three-way differential harness | done |
-| 4 | Console store (SQLite) | not started |
+| 4 | Console store (SQLite) | done |
 | 5 | Console auth (Argon2, sessions, CSRF) | not started |
 | 6 | Console HTTP: routes, templates, ingest, retention | not started |
 | 7 | Docker, compose, Fly, publish | not started |
