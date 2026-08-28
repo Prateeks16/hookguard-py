@@ -11,6 +11,7 @@ a dependency here lands in both images.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
@@ -77,6 +78,16 @@ class VerifyEvent:
             "body_sha256": self.body_sha256,
             "remote_ip": self.remote_ip,
         }
+
+    def to_json_bytes(self) -> bytes:
+        """Serialize for the wire.
+
+        Compact separators, matching Go's ``json.Marshal``, so the same event
+        produces byte-identical payloads in both implementations. Not required
+        for correctness -- each side signs the bytes it actually sends -- but it
+        makes a captured request comparable across the two.
+        """
+        return json.dumps(self.to_json_dict(), separators=(",", ":")).encode("utf-8")
 
     @classmethod
     def from_json_dict(cls, data: dict[str, Any]) -> VerifyEvent:

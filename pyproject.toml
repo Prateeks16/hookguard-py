@@ -20,6 +20,10 @@ dependencies = []
 # installing [gateway] must never pull a provider SDK. CI asserts it.
 [project.optional-dependencies]
 gateway = [
+  # certifi supplies the trust anchors for PayPal's certificate chain. Go used
+  # the system root pool; Python has no built-in equivalent, so this is an
+  # explicit dependency rather than one inherited from httpx by accident.
+  "certifi>=2024.7.4",
   "fastapi>=0.115",
   "uvicorn[standard]>=0.32",
   "httpx>=0.28",

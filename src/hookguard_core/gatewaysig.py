@@ -17,7 +17,8 @@ from __future__ import annotations
 
 import hashlib
 import hmac
-import re
+
+from .stricthex import decode_hex
 
 __all__ = [
     "HEADER",
@@ -32,12 +33,6 @@ HEADER = "X-HookGuard-Signature"
 
 #: Carries the verified provider name.
 PROVIDER_HEADER = "X-HookGuard-Provider"
-
-# Go's hex.DecodeString accepts an even-length run of hex digits and nothing
-# else. Python's bytes.fromhex is laxer -- it skips ASCII whitespace, so
-# "de ad..." would decode where Go errors. Pin the strict shape ourselves so
-# the two implementations reject the same inputs.
-_HEX = re.compile(r"\A(?:[0-9a-fA-F]{2})*\Z")
 
 
 class GatewaySignatureError(Exception):
@@ -59,9 +54,10 @@ def verify(secret: bytes, provider: str, body: bytes, sig_hex: str) -> None:
         GatewaySignatureError: if the signature is not valid hex, or does not
             match.
     """
-    if not _HEX.fullmatch(sig_hex):
-        raise GatewaySignatureError("invalid gateway signature encoding")
-    got = bytes.fromhex(sig_hex)
+    try:
+        got = decode_hex(sig_hex)
+    except ValueError:
+        raise GatewaySignatureError("invalid gateway signature encoding") from None
     if not hmac.compare_digest(got, _mac(secret, provider, body)):
         raise GatewaySignatureError("gateway signature mismatch")
 
