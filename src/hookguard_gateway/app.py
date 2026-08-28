@@ -27,7 +27,6 @@ from starlette.responses import PlainTextResponse, Response
 
 from hookguard_core import gatewaysig
 
-from . import providers as _providers  # noqa: F401  (registers every provider)
 from .config import Config, Route, config_path, load_config
 from .emitter import EventEmitter, classify_reason
 from .verifier import VerificationError, Verifier, VerifierDeps, build_verifier

@@ -75,14 +75,40 @@ jobs:
       - name: Test
         working-directory: oracle
         run: go test ./...
-      - name: Committed vectors match what Go produces
+      - name: Committed vectors match what the generators produce
         run: |
-          cd oracle && go run ./vecgen > ../tests/vectors/core.json
+          cd oracle
+          go run ./vecgen > ../tests/vectors/core.json
+          go run ./sigvecgen > ../tests/vectors/signatures.json
           cd ..
-          if ! git diff --exit-code tests/vectors/core.json; then
-            echo "::error::tests/vectors/core.json is stale -- regenerate with: cd oracle && go run ./vecgen > ../tests/vectors/core.json"
+          if ! git diff --exit-code tests/vectors/; then
+            echo "::error::a vector file is stale or hand-edited. Regenerate from oracle/:"
+            echo "::error::  go run ./vecgen > ../tests/vectors/core.json"
+            echo "::error::  go run ./sigvecgen > ../tests/vectors/signatures.json"
             exit 1
           fi
+
+  # The project's correctness claim, as its own required check: Python, the Go
+  # implementation, and the vendors' libraries must all return the same verdict
+  # for every committed vector. Split from the main test job so a regression
+  # here is legible as what it is rather than one red X among hundreds.
+  differential:
+    name: Differential harness (three-way)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: oracle/go.mod
+      - run: pip install --upgrade pip && pip install -e ".[dev]"
+      - name: Python leg (and the Stripe oracle)
+        run: pytest -m differential -v
+      - name: Go leg (and the stripe-go / go-github oracles)
+        working-directory: oracle
+        run: go test ./verifier/ -run Differential -v
 
   # The Go build asserted this with `go list -deps . | grep -E 'stripe|go-github'`.
   # The Python equivalent: install the service extras ALONE, then require the

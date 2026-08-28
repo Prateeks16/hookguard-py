@@ -80,7 +80,7 @@ hookguard-py/
 |---|---|---|
 | `[gateway]` | `fastapi`, `uvicorn[standard]`, `httpx`, `cryptography` | in image |
 | `[console]` | gateway extras + `jinja2`, `argon2-cffi`, `python-multipart` | in image |
-| `[dev]` | `pytest`, `pytest-asyncio`, `ruff`, `stripe`, `ShopifyAPI` | CI only |
+| `[dev]` | `pytest`, `pytest-asyncio`, `ruff`, `stripe` | CI only |
 | `oracle/go.mod` | `stripe-go`, `go-github` + the Go toolchain | CI only |
 
 Target is **Python 3.12** (the development machine's version). Nothing in the
@@ -104,10 +104,32 @@ between them is transitive and provable rather than coordinated at runtime.
 |---|---|---|---|
 | Stripe | `stripe` (official) | `stripe-go` (official) | Two official oracles. Stronger than today. |
 | GitHub | none exists | `go-github` (official) | **The loss, recovered.** Python's verdict is pinned to the official library through the Go leg. |
-| Shopify | `ShopifyAPI` (official) | re-implementation | Upgraded. Go had no official library; Python does. |
+| Shopify | **none exists** | re-implementation | Unchanged from Go. See the correction below. |
 | PayPal | none | none | Unchanged — PayPal is outside the harness today too. |
 
-**Caveat to settle before phase 3.** Python is a submission requirement, so a
+**Correction (phase 3).** An earlier revision of this plan claimed Python
+gained an official Shopify oracle. That was wrong, and checking it was what
+found it: the `ShopifyAPI` package's `validate_hmac` computes a sorted
+query-string HMAC for OAuth callbacks, a different algorithm from webhook body
+verification, and nothing in the package verifies a webhook body at all. The
+dependency was dropped. Shopify therefore has **no official oracle in either
+language** and rests on the cross-language leg plus the documented algorithm --
+exactly the caveat the Go report already carried. The port is neutral on
+Shopify, not an improvement. It remains a net gain overall: two official Stripe
+oracles where there was one, and GitHub's recovered.
+
+**A second finding, from running the harness.** Using Stripe's event-construction
+API as the oracle conflates signature validity with event deserialization: it
+rejected a correctly signed empty body. The Go original avoided this by
+restricting its payloads to valid JSON. Both legs now use the signature-only
+APIs (`ValidatePayloadIgnoringTolerance` and `verify_header(tolerance=None)`),
+which keeps the adversarial payloads and makes the two vendor legs ask the same
+question. Relatedly, Stripe's *Python* library decodes the payload as UTF-8
+before verifying, so it cannot judge a non-UTF-8 body at all; that one case is
+explicitly excluded from the Python vendor leg, and the exclusion set is itself
+asserted so it cannot widen unnoticed.
+
+**Caveat to settle.** Python is a submission requirement, so a
 Go directory invites a question. It is named `oracle/`, its purpose is stated
 here and in its own README, and CI proves no Go artifact reaches an image. If
 the rule forbids it anyway, deleting `oracle/` costs nothing operationally —
@@ -128,8 +150,10 @@ report.
   the documented drop-oldest. The retained Go verifiers are pure functions, so
   `-race` would tell us nothing about them anyway.
 
-One gain, beyond the harness: Python's official Shopify library turns an honest
-caveat in the current report into a genuine third-party oracle.
+The gain is in the harness itself: Stripe now has two independent official
+oracles rather than one, GitHub's is recovered through the Go leg, and every
+vector is judged by two implementations in two languages. Shopify and PayPal
+are unchanged from the Go original.
 
 ## 7. Risks, ordered by how quietly they fail
 

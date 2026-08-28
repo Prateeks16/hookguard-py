@@ -40,10 +40,16 @@ dev = [
   "pytest>=8.3",
   "pytest-asyncio>=0.25",
   "ruff>=0.9",
-  # Differential-harness oracles ONLY. Never a runtime dependency of either
-  # service -- the `no-provider-sdk` CI guard fails the build if one leaks.
+  # Differential-harness oracle ONLY. Never a runtime dependency of either
+  # service -- the `no-provider-sdk` CI guard fails the build if it leaks.
+  #
+  # Stripe is the only provider with an official Python library that verifies
+  # webhook signatures. ShopifyAPI was evaluated and dropped: its validate_hmac
+  # is for OAuth query parameters, a different algorithm from webhook body
+  # verification, so it is not an oracle for anything we do. GitHub's oracle
+  # lives on the Go side (go-github), which is a large part of why oracle/
+  # exists.
   "stripe>=11.0",
-  "ShopifyAPI>=12.7",
 ]
 
 [project.scripts]
