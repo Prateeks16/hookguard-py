@@ -1,0 +1,882 @@
+{
+  "_comment": "Generated from the Go implementation by oracle/vecgen. Do not hand-edit; regenerate with: cd oracle \u0026\u0026 go run ./vecgen \u003e ../tests/vectors/core.json",
+  "gatewaysig": [
+    {
+      "name": "stripe/plain json/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "3ae12a819fe44190d48dd9e8551f431ef27d098047336522c71416d9a67b3257"
+    },
+    {
+      "name": "stripe/emoji/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "bc8051055c5383769802624f14a5b27c2d4c64e7671cd25c0f701cfd86f3fcc0"
+    },
+    {
+      "name": "stripe/spaced and float/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "4ebab4a267db40628ac527a07cbc84143b8f9cfcfa41f2219609b816ce07156f"
+    },
+    {
+      "name": "stripe/empty body/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "",
+      "signature": "21832a3efadf0b38d99b4f73d9c5504954ba533c59ce1e3bd6bb60805fb45adb"
+    },
+    {
+      "name": "stripe/raw bytes/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "AAH//n+A",
+      "signature": "54fa7b3100dc4235efc636978d170d2e6f4398ae9cd2118ac12afb4c5c2363fc"
+    },
+    {
+      "name": "stripe/newlines/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "stripe",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "f02bbc00ff2bc0a735e4de4aa4c5ddbd162d0f1c7ba7ac9313f675e7dd6e665d"
+    },
+    {
+      "name": "github/plain json/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "fdd59403132dfda3b1bfc2f24c37dd6d29b9e49a067c0240bfbef373810fd80f"
+    },
+    {
+      "name": "github/emoji/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "6a2f717eb20494df3a4a54bad91654a402e0ebf7d6439c6af88072b2015b7a94"
+    },
+    {
+      "name": "github/spaced and float/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "89d8f5ebfb818e11b4df51d4adfd616a1208e3c2581d38b0ac111afff90b8d81"
+    },
+    {
+      "name": "github/empty body/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "",
+      "signature": "ed24e0e497051d01a9a1805ca104e32447cb05c7a78eca065bc93c6c6b2df0f5"
+    },
+    {
+      "name": "github/raw bytes/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "AAH//n+A",
+      "signature": "5f43a2c0dae2756068bb4acb5372ee5598389213ee25f08c6a16f99c26d738eb"
+    },
+    {
+      "name": "github/newlines/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "github",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "cdc0b7d5320e1994e4403ab0d1a907882aa04b5ab7b7c602b226978005c0bb02"
+    },
+    {
+      "name": "shopify/plain json/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "812e3dfa7dfa90e1da2d89536969e9f089c359e39c7f89e8a435a761b403ba69"
+    },
+    {
+      "name": "shopify/emoji/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "90a4a144e1243d17b3dc46f000c084def5d8965fb038c8b331e0ec447664b1d2"
+    },
+    {
+      "name": "shopify/spaced and float/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "96e6b9d8cd68647b4ade15b6472335cdf5e16f69ed227b103b12d12e357f0cd3"
+    },
+    {
+      "name": "shopify/empty body/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "",
+      "signature": "7b7de64899ed55ec74dbe2975d0b0978d451f84915fa1392fd35c7241a5be7f8"
+    },
+    {
+      "name": "shopify/raw bytes/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "AAH//n+A",
+      "signature": "cadc4765e1176195dd60d018233b35d6958538f64196723b8721c2d2042e9776"
+    },
+    {
+      "name": "shopify/newlines/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "shopify",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "cccaf2a081e7b4773af96d762f7f0d081014711814c5593964c6cf2183fca588"
+    },
+    {
+      "name": "paypal/plain json/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "5faa914788b80a17a7eb516f088612a4a4b62b8b2d326385fb12ac5e50230a75"
+    },
+    {
+      "name": "paypal/emoji/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "0bd5b8bef5aaa718917ef348e334be3362a5e32bfec90446d85b761353ba01a5"
+    },
+    {
+      "name": "paypal/spaced and float/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "ce5067c0b1712dcd71a929beeb0fc9e98576383cd4d72e3d2ed65ca90ef7f0a3"
+    },
+    {
+      "name": "paypal/empty body/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "",
+      "signature": "09c1e9808bc31fa72d0a2144c12da7253dcf21643813cccbbb4edeea31ed3205"
+    },
+    {
+      "name": "paypal/raw bytes/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "AAH//n+A",
+      "signature": "4f17898d26f9f804f3a65a0423fe7d4e2a138a23fdf64a65548682c03fbd9853"
+    },
+    {
+      "name": "paypal/newlines/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "paypal",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "518530997b74b6018a97a65d6d61af2a6f54dd156f305db1ccd86b514dddc414"
+    },
+    {
+      "name": "console-ingest/plain json/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "d4974ee31ee62f5a105fc42cc85a4f7d3c18ca9b5422c881022451209a45a7a4"
+    },
+    {
+      "name": "console-ingest/emoji/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "ca153333de5570d1624d5770828b42657f7cbac29e7577f1859bfe830494958c"
+    },
+    {
+      "name": "console-ingest/spaced and float/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "89d06f94f7bbaa98f50e1b2b970340e4e5c9f93bd7fb633acd6dd68ca7215dde"
+    },
+    {
+      "name": "console-ingest/empty body/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "",
+      "signature": "06af50eb9fe6f46b662be8a82e974c056026a03152328a23722282f45563e8a1"
+    },
+    {
+      "name": "console-ingest/raw bytes/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "AAH//n+A",
+      "signature": "f15072501ae4fb867542fb345b31b079d07da5f9d0071b31b161da796b3a7ce1"
+    },
+    {
+      "name": "console-ingest/newlines/secret=\"internal\"",
+      "secret": "internal",
+      "provider": "console-ingest",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "d9d0682a01fe2cc1bc257e0905c96b46751381fa8f2f1b4f27e041901ac13a6d"
+    },
+    {
+      "name": "stripe/plain json/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "a351e10bf8c45c946c66b480ba3d5e762fab7c214cda6b2cd4f4010b2c753df7"
+    },
+    {
+      "name": "stripe/emoji/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "1316dfea6092b8e519a031c338ddbe684512b9360a215fd791327fb617456bea"
+    },
+    {
+      "name": "stripe/spaced and float/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "46b8f9be1ed9eaab4d90532a1083eb56bacc9df44d13efb7130bcb47c1d4b72a"
+    },
+    {
+      "name": "stripe/empty body/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "",
+      "signature": "947ae94e3357a08a45f10a8a9b7ec13c5b1a44a2fbe38d67c4f90c5fbae02ff6"
+    },
+    {
+      "name": "stripe/raw bytes/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "AAH//n+A",
+      "signature": "52b069c80abb6adc16638ac488904c17a14208d415ba8d29809c492d500aabaf"
+    },
+    {
+      "name": "stripe/newlines/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "stripe",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "34de1d28be40138416ea5ec154448596fe2904caede97b1e0d157fde9aa16229"
+    },
+    {
+      "name": "github/plain json/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "f3dee2ae6ad7fc60708c6d15f8ce479ea8d6619830889fe6ab30e93bca723c77"
+    },
+    {
+      "name": "github/emoji/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "6abd25abbeca02d0269b642150a7daef57fd76d5e79ca1d8bd7ccc6362c67339"
+    },
+    {
+      "name": "github/spaced and float/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "45162208f8f556586a113b72a741178b88cab9b3c85032d1ff69fee811720a40"
+    },
+    {
+      "name": "github/empty body/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "",
+      "signature": "834bbe9dd207b3d3264c25ef527c081185b674e63b950df620cd996cc0e7680d"
+    },
+    {
+      "name": "github/raw bytes/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "AAH//n+A",
+      "signature": "f2d8f2bd3980ebdb7c88a984b69cce7763288059564c0dff717bf5402c68251c"
+    },
+    {
+      "name": "github/newlines/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "github",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "ac18fbf1e7c66d6fb8f31683d8e908cddf9e6976921d9133978694a203fe90aa"
+    },
+    {
+      "name": "shopify/plain json/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "396ae93f25778e4502813f5db4a1d059b2ad924739dfc6588214defc44811d5f"
+    },
+    {
+      "name": "shopify/emoji/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "ea34acad0c9997cdcfd443dac45e6fda50005724a88eef80f123083ff4c25911"
+    },
+    {
+      "name": "shopify/spaced and float/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "ddb5c79f5a9c11efd7b3733a4a0b61916f44dac2e2e47227b03a45732252d29f"
+    },
+    {
+      "name": "shopify/empty body/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "",
+      "signature": "c4d0b9cf6f919900e7b38a07132575455a9491acc579ac802c7e8e2b3d1f0918"
+    },
+    {
+      "name": "shopify/raw bytes/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "AAH//n+A",
+      "signature": "5e8ba7c8c189bfd2fb4cb1bd9a61ba925b48207600c6101cb52419450c7ab13a"
+    },
+    {
+      "name": "shopify/newlines/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "shopify",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "6db7d8700317cf9a553c640cb25f03f7e91e3ef9b61f06f75d3d1b6c3f8c1d5c"
+    },
+    {
+      "name": "paypal/plain json/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "ee211d0943710e0bbf749dbb984171db1700140bb83b1765c5bed457b33f374b"
+    },
+    {
+      "name": "paypal/emoji/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "e00c19d91f9977ce6f2459c1037274897ea53ae2cd460c62e117590d6393f317"
+    },
+    {
+      "name": "paypal/spaced and float/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "a96d3594e734002a0298af0aa26beca77c4b52df1d260e58894392f8fd0d1a06"
+    },
+    {
+      "name": "paypal/empty body/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "",
+      "signature": "f78d368733fd1e0a81ab0798ca602c087efe0e362b50698d2b67fd93c17f88b0"
+    },
+    {
+      "name": "paypal/raw bytes/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "AAH//n+A",
+      "signature": "1c516ea0521f5695477d7efb375c3b13d72e40eb5e0d9289e4e90037a794dc01"
+    },
+    {
+      "name": "paypal/newlines/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "paypal",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "af4afefd8f7df09c1d252ce523c45076a528e4f52ed01a3746932ccd3df19ef8"
+    },
+    {
+      "name": "console-ingest/plain json/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "fa68ce5cb5a2d71983f01fced5c01df9bb626a00d97d38c73633933bae1c08ac"
+    },
+    {
+      "name": "console-ingest/emoji/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "eb71e50ff5f11fb7f8c222dc4b40559cc0d1f5ac4d0737247ca73ba85a7258e6"
+    },
+    {
+      "name": "console-ingest/spaced and float/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "efed7e22feb034422d369047d9d36e56698bb9e8ee5a6f25e2bd8c267a5ce334"
+    },
+    {
+      "name": "console-ingest/empty body/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "",
+      "signature": "983aac5caae6e770fdc729371bf911f29f8cd389a3b9d9485e9a1787a1162202"
+    },
+    {
+      "name": "console-ingest/raw bytes/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "AAH//n+A",
+      "signature": "7e880abfc8c4209022a9b18df4426a397a6756da50f6f2376eab74784b049bfd"
+    },
+    {
+      "name": "console-ingest/newlines/secret=\"s3cr3t-with-dashes\"",
+      "secret": "s3cr3t-with-dashes",
+      "provider": "console-ingest",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "702a8b59594ab0be9bdcb0c474602e12edea4011e2d38b455214a2ce006dea8a"
+    },
+    {
+      "name": "stripe/plain json/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "28aacc256c61d80d3a3f4584b54fd34a2c88b4916318a945898bb03c70df2294"
+    },
+    {
+      "name": "stripe/emoji/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "cd9ba5518a779156e673e88bc255bc2b2b6ea81f1e80d2c7957199586350d595"
+    },
+    {
+      "name": "stripe/spaced and float/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "5d08f06a37a60ee830f87bea5bbfc88ff8d67f8828bb675692d93aa5eab4ff1f"
+    },
+    {
+      "name": "stripe/empty body/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "",
+      "signature": "857796e159847f8a0290942bb5d5462964650b9308bdbedad698eb9d7e5bdbce"
+    },
+    {
+      "name": "stripe/raw bytes/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "AAH//n+A",
+      "signature": "9b466a831171ef701680e2a35875f8907515d83b2e50f38c2f8731b48e318015"
+    },
+    {
+      "name": "stripe/newlines/secret=\"\"",
+      "secret": "",
+      "provider": "stripe",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "85adc5889f745416490ef65db37580e438144a66ed2ac0082a11ca896abe2778"
+    },
+    {
+      "name": "github/plain json/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "52de9515844f9af81da76160403eeb280539873116f38c0e080401ee6dae713c"
+    },
+    {
+      "name": "github/emoji/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "20319bf07c80192e9f32f592db6ca792ed66849a8b11db6ea3cb9c93bece0989"
+    },
+    {
+      "name": "github/spaced and float/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "4f59e25a91d4ac0befdce0d71c97ee6497ff884f0fdef07e816884486d63b7b2"
+    },
+    {
+      "name": "github/empty body/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "",
+      "signature": "bd0819b2f539017a1d13f205f2d2c900db2db76843ad505549ccb29a4acfe85b"
+    },
+    {
+      "name": "github/raw bytes/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "AAH//n+A",
+      "signature": "77050d1ddbfa6f76a004098dfd707cfee4f9e53206a634bf358ad2e23be4322b"
+    },
+    {
+      "name": "github/newlines/secret=\"\"",
+      "secret": "",
+      "provider": "github",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "a0ec5834d778c067cc305b6c396219240580fc7ac955fe2d6467fd9e3fb1c7c0"
+    },
+    {
+      "name": "shopify/plain json/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "fa9c07658a01daab8763f70d63f913ff1489b6fc61ef67430b29cae0c95f4245"
+    },
+    {
+      "name": "shopify/emoji/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "6ee33f2c4914b7ce7d217a944580ffc4da9c9c414fd5c887d461a87b86581c49"
+    },
+    {
+      "name": "shopify/spaced and float/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "116081b0a7525c131270b05aaf1c3e0ae3807c257fca092540fa72ab858e3a02"
+    },
+    {
+      "name": "shopify/empty body/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "",
+      "signature": "9b8e1771bfbdfb21db73a15167eb4016f4e7fa8bb7f2c94a23bfe6ab4770f965"
+    },
+    {
+      "name": "shopify/raw bytes/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "AAH//n+A",
+      "signature": "e4f6d5aab8e8299551b89cf5feac2a533cf9c3fd64f7540c3e66e97bf314cd02"
+    },
+    {
+      "name": "shopify/newlines/secret=\"\"",
+      "secret": "",
+      "provider": "shopify",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "0759d523fbb6793afac7b2d1fddc4135aee7cd1a2e71d350ee3cb2ed7eebcfb8"
+    },
+    {
+      "name": "paypal/plain json/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "206f56d9d8aec4857c72b23e0eea575648215ce4eb5847cd9fc73cd468d08540"
+    },
+    {
+      "name": "paypal/emoji/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "f0c7d3abac4588adfc4178bfb109570a7822c81d6829d9cd07d5c16291c57cd8"
+    },
+    {
+      "name": "paypal/spaced and float/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "70db387336c5149a0068df677cfe7de20563300b1ee82cd71509e020b20549dc"
+    },
+    {
+      "name": "paypal/empty body/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "",
+      "signature": "846474ccb8a8479713d2435ed238d29334bb83fbd3fe28ee945e407392a31fe5"
+    },
+    {
+      "name": "paypal/raw bytes/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "AAH//n+A",
+      "signature": "a5623b3456d636cde736f013dc7694e0a14cbbdefc04e849df15bb73f86fa2e8"
+    },
+    {
+      "name": "paypal/newlines/secret=\"\"",
+      "secret": "",
+      "provider": "paypal",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "550430a0415b2af66af9f32e081f00b403c9755ed478518161306ebeabe108f4"
+    },
+    {
+      "name": "console-ingest/plain json/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8xIiwiYW1vdW50Ijo0MjQyfQ==",
+      "signature": "f4a7bde8281b403919c23d389a1eded7328b29248ae33912734ed4b34ad7b646"
+    },
+    {
+      "name": "console-ingest/emoji/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "eyJpZCI6ImV2dF8yIiwibm90ZSI6InRoYW5rcyDwn5qA4pyoIn0=",
+      "signature": "d045bc00ecf534150a23f8e9e5ce6b982b8df41f61d7fd20826a51e8186f2bb7"
+    },
+    {
+      "name": "console-ingest/spaced and float/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "eyAiaWQiOiJldnRfMyIsICAiYW1vdW50IjoxMDAuMDAgfQ==",
+      "signature": "ef9a3103f8a35115355eca5a0b9d0cea9eea2961498cdaf0ee01eb7ac83f3034"
+    },
+    {
+      "name": "console-ingest/empty body/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "",
+      "signature": "c465cf022aa2603e068403f995d45bd80f2a4799453dca29407e0d85714ec7e5"
+    },
+    {
+      "name": "console-ingest/raw bytes/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "AAH//n+A",
+      "signature": "ba4d607b9f3e7c92a25cc65e4a755ff1d8314925f930c4cc789317023a356556"
+    },
+    {
+      "name": "console-ingest/newlines/secret=\"\"",
+      "secret": "",
+      "provider": "console-ingest",
+      "body_b64": "ewogICJhIjogMQp9Cg==",
+      "signature": "0356b464e2f5c9e860279fc758566bfe98913ce8d074925ce56ca1f86e5a0861"
+    }
+  ],
+  "go_version": "go1.26.7",
+  "goduration": [
+    {
+      "name": "\"5m\"",
+      "input": "5m",
+      "nanos": 300000000000,
+      "error": null
+    },
+    {
+      "name": "\"1h30m\"",
+      "input": "1h30m",
+      "nanos": 5400000000000,
+      "error": null
+    },
+    {
+      "name": "\"300s\"",
+      "input": "300s",
+      "nanos": 300000000000,
+      "error": null
+    },
+    {
+      "name": "\"0\"",
+      "input": "0",
+      "nanos": 0,
+      "error": null
+    },
+    {
+      "name": "\"0s\"",
+      "input": "0s",
+      "nanos": 0,
+      "error": null
+    },
+    {
+      "name": "\"1.5h\"",
+      "input": "1.5h",
+      "nanos": 5400000000000,
+      "error": null
+    },
+    {
+      "name": "\".5s\"",
+      "input": ".5s",
+      "nanos": 500000000,
+      "error": null
+    },
+    {
+      "name": "\"100ms\"",
+      "input": "100ms",
+      "nanos": 100000000,
+      "error": null
+    },
+    {
+      "name": "\"1us\"",
+      "input": "1us",
+      "nanos": 1000,
+      "error": null
+    },
+    {
+      "name": "\"1µs\"",
+      "input": "1µs",
+      "nanos": 1000,
+      "error": null
+    },
+    {
+      "name": "\"1μs\"",
+      "input": "1μs",
+      "nanos": 1000,
+      "error": null
+    },
+    {
+      "name": "\"1ns\"",
+      "input": "1ns",
+      "nanos": 1,
+      "error": null
+    },
+    {
+      "name": "\"-5m\"",
+      "input": "-5m",
+      "nanos": -300000000000,
+      "error": null
+    },
+    {
+      "name": "\"+5m\"",
+      "input": "+5m",
+      "nanos": 300000000000,
+      "error": null
+    },
+    {
+      "name": "\"2h45m\"",
+      "input": "2h45m",
+      "nanos": 9900000000000,
+      "error": null
+    },
+    {
+      "name": "\"1h0m0s\"",
+      "input": "1h0m0s",
+      "nanos": 3600000000000,
+      "error": null
+    },
+    {
+      "name": "\"1m30.5s\"",
+      "input": "1m30.5s",
+      "nanos": 90500000000,
+      "error": null
+    },
+    {
+      "name": "\"5.m\"",
+      "input": "5.m",
+      "nanos": 300000000000,
+      "error": null
+    },
+    {
+      "name": "\"-0\"",
+      "input": "-0",
+      "nanos": 0,
+      "error": null
+    },
+    {
+      "name": "\"0.000000001s\"",
+      "input": "0.000000001s",
+      "nanos": 1,
+      "error": null
+    },
+    {
+      "name": "\"9223372036854775807ns\"",
+      "input": "9223372036854775807ns",
+      "nanos": 9223372036854775807,
+      "error": null
+    },
+    {
+      "name": "\"\"",
+      "input": "",
+      "nanos": null,
+      "error": "time: invalid duration \"\""
+    },
+    {
+      "name": "\"5\"",
+      "input": "5",
+      "nanos": null,
+      "error": "time: missing unit in duration \"5\""
+    },
+    {
+      "name": "\"m\"",
+      "input": "m",
+      "nanos": null,
+      "error": "time: invalid duration \"m\""
+    },
+    {
+      "name": "\"abc\"",
+      "input": "abc",
+      "nanos": null,
+      "error": "time: invalid duration \"abc\""
+    },
+    {
+      "name": "\"5x\"",
+      "input": "5x",
+      "nanos": null,
+      "error": "time: unknown unit \"x\" in duration \"5x\""
+    },
+    {
+      "name": "\"1.2.3s\"",
+      "input": "1.2.3s",
+      "nanos": null,
+      "error": "time: missing unit in duration \"1.2.3s\""
+    },
+    {
+      "name": "\"  5m\"",
+      "input": "  5m",
+      "nanos": null,
+      "error": "time: invalid duration \"  5m\""
+    },
+    {
+      "name": "\"5m \"",
+      "input": "5m ",
+      "nanos": null,
+      "error": "time: unknown unit \"m \" in duration \"5m \""
+    },
+    {
+      "name": "\"5 m\"",
+      "input": "5 m",
+      "nanos": null,
+      "error": "time: unknown unit \" m\" in duration \"5 m\""
+    },
+    {
+      "name": "\"--5m\"",
+      "input": "--5m",
+      "nanos": null,
+      "error": "time: invalid duration \"--5m\""
+    },
+    {
+      "name": "\"9223372036854775808ns\"",
+      "input": "9223372036854775808ns",
+      "nanos": null,
+      "error": "time: invalid duration \"9223372036854775808ns\""
+    },
+    {
+      "name": "\"10000000000000h\"",
+      "input": "10000000000000h",
+      "nanos": null,
+      "error": "time: invalid duration \"10000000000000h\""
+    }
+  ],
+  "header": "X-HookGuard-Signature",
+  "provider_header": "X-HookGuard-Provider",
+  "timestamps": [
+    {
+      "name": "nanosecond precision",
+      "unix_ns": 1788004800123456789,
+      "utc_wire": "2026-08-29T12:00:00.123456789Z",
+      "wire": "2026-08-29T12:00:00.123456789Z"
+    },
+    {
+      "name": "microsecond precision",
+      "unix_ns": 1788004800123456000,
+      "utc_wire": "2026-08-29T12:00:00.123456Z",
+      "wire": "2026-08-29T12:00:00.123456Z"
+    },
+    {
+      "name": "millisecond precision",
+      "unix_ns": 1788004800123000000,
+      "utc_wire": "2026-08-29T12:00:00.123Z",
+      "wire": "2026-08-29T12:00:00.123Z"
+    },
+    {
+      "name": "whole second",
+      "unix_ns": 1788004800000000000,
+      "utc_wire": "2026-08-29T12:00:00Z",
+      "wire": "2026-08-29T12:00:00Z"
+    },
+    {
+      "name": "single digit fraction",
+      "unix_ns": 1788004800100000000,
+      "utc_wire": "2026-08-29T12:00:00.1Z",
+      "wire": "2026-08-29T12:00:00.1Z"
+    },
+    {
+      "name": "non-utc offset",
+      "unix_ns": 1787985000500000000,
+      "utc_wire": "2026-08-29T06:30:00.5Z",
+      "wire": "2026-08-29T12:00:00.5+05:30"
+    },
+    {
+      "name": "epoch",
+      "unix_ns": 0,
+      "utc_wire": "1970-01-01T00:00:00Z",
+      "wire": "1970-01-01T00:00:00Z"
+    }
+  ]
+}

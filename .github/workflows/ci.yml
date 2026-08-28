@@ -47,6 +47,43 @@ jobs:
       - name: pytest
         run: pytest -v
 
+  # oracle/ is test-only Go and never ships (see oracle/README.md). This job
+  # keeps it honest in both directions: the module must build and pass its own
+  # tests, and the committed vectors must still be exactly what it produces --
+  # so neither a change to the Go source nor a hand-edit of the vector file can
+  # quietly drift the two implementations apart.
+  oracle:
+    name: Go oracle and vector freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: oracle/go.mod
+      - name: gofmt
+        working-directory: oracle
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::these files need gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+      - name: Vet
+        working-directory: oracle
+        run: go vet ./...
+      - name: Test
+        working-directory: oracle
+        run: go test ./...
+      - name: Committed vectors match what Go produces
+        run: |
+          cd oracle && go run ./vecgen > ../tests/vectors/core.json
+          cd ..
+          if ! git diff --exit-code tests/vectors/core.json; then
+            echo "::error::tests/vectors/core.json is stale -- regenerate with: cd oracle && go run ./vecgen > ../tests/vectors/core.json"
+            exit 1
+          fi
+
   # The Go build asserted this with `go list -deps . | grep -E 'stripe|go-github'`.
   # The Python equivalent: install the service extras ALONE, then require the
   # provider SDKs to be unimportable. If one ever becomes a runtime dependency

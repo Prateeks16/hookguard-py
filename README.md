@@ -56,7 +56,7 @@ Ported in phases; see [MIGRATION.md](MIGRATION.md) for the full plan.
 | Phase | Scope | State |
 |------:|-------|-------|
 | 0 | Repository scaffold, CI, dependency split | done |
-| 1 | Shared core (`gatewaysig`, event schema, Go durations) | not started |
+| 1 | Shared core (`gatewaysig`, event schema, Go durations) | done |
 | 2 | Gateway: config, verifiers, four providers, forwarding | not started |
 | 3 | Three-way differential harness | not started |
 | 4 | Console store (SQLite) | not started |
