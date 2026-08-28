@@ -100,3 +100,11 @@ ignore = [
 # S105 flags AuthEventKind.PASSWORD_CHANGE as a hardcoded password. It is the
 # string "pw_change", an event kind written to the security log.
 "src/hookguard_console/store/*.py" = ["S608", "S105"]
+
+# S106 fires on any argument whose NAME contains "secret" or "password". Here
+# those are prose and UI copy, not credentials: providers_catalog's
+# secret_source describes where in a provider's dashboard to find a value, and
+# the settings handlers pass password_error/password_ok as messages to render.
+# Checked individually rather than waved through.
+"src/hookguard_console/providers_catalog.py" = ["S106"]
+"src/hookguard_console/routes/settings.py" = ["S106"]
